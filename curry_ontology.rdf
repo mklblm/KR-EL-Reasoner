@@ -1,0 +1,643 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4/"
+     xml:base="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4/"
+     xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+     xmlns:terms="http://purl.org/dc/terms/">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4">
+        <dc:description>An ontology about curries and their ingredients</dc:description>
+        <dc:title>curry</dc:title>
+        <rdfs:label>curry</rdfs:label>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://purl.org/dc/elements/1.1/description -->
+
+    <owl:AnnotationProperty rdf:about="http://purl.org/dc/elements/1.1/description"/>
+    
+
+
+    <!-- http://purl.org/dc/elements/1.1/title -->
+
+    <owl:AnnotationProperty rdf:about="http://purl.org/dc/elements/1.1/title"/>
+    
+
+
+    <!-- http://purl.org/dc/terms/Contributor -->
+
+    <owl:AnnotationProperty rdf:about="http://purl.org/dc/terms/Contributor"/>
+    
+
+
+    <!-- http://www.w3.org/2004/02/skos/core#prefLabel -->
+
+    <owl:AnnotationProperty rdf:about="http://www.w3.org/2004/02/skos/core#prefLabel"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#hasCountryOfOrigin -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#hasCountryOfOrigin"/>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#hasCurryBase -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#hasCurryBase">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#hasIngredient"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#hasCurryIngredient -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#hasCurryIngredient">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#hasIngredient"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#hasIngredient -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#hasIngredient"/>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#hasPreparationType -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#hasPreparationType"/>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#hasSpiciness -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#hasSpiciness"/>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#isBaseOf -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#isBaseOf">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#isIngredientOf"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#isCurryIngredientOf -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#isCurryIngredientOf">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#isIngredientOf"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#isIngredientOf -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#isIngredientOf"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Bread -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Bread">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Food"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Broth -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Broth">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#CurryBase"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#ButterChicken -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#ButterChicken">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#NamedCurry"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#hasCurryIngredient"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#GaramMasala"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#hasCurryIngredient"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#GroundCoriander"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#hasCurryIngredient"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#GroundCumin"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#hasCurryIngredient"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#GroundTurmeric"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#hasCountryOfOrigin"/>
+                <owl:hasValue rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#India"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:label>ButterChicken</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Chapati -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Chapati">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Bread"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#ChilliPowder -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#ChilliPowder">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#GroundSpices"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Country -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Country">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#DomainThing"/>
+                    <owl:Class>
+                        <owl:oneOf rdf:parseType="Collection">
+                            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#India"/>
+                            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Thailand"/>
+                            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#United_Kingdom"/>
+                        </owl:oneOf>
+                    </owl:Class>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:comment>Insert Comment</rdfs:comment>
+        <rdfs:label>Country</rdfs:label>
+        <skos:prefLabel>Country</skos:prefLabel>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Cream -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Cream">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#CurryBase"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Curry -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Curry">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Food"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#hasCurryBase"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#CurryBase"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#CurryBase -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#CurryBase">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Food"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#CurryIngredient -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#CurryIngredient">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Food"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#DomainThing -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#DomainThing">
+        <owl:disjointWith rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#ValuePartition"/>
+        <rdfs:label>DomainThing</rdfs:label>
+        <skos:prefLabel>Domain Thing</skos:prefLabel>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Extreme -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Extreme">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Spiciness"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Food -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Food">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#DomainThing"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#GaramMasala -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#GaramMasala">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#CurryIngredient"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Garlic -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Garlic">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#CurryIngredient"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Ginger -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Ginger">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#CurryIngredient"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#GlutenFreeCurry -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#GlutenFreeCurry">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Curry"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#hasCurryIngredient"/>
+                        <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#CurryIngredient"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#GroundAlmonds -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#GroundAlmonds">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#CurryIngredient"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#GroundCoriander -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#GroundCoriander">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#GroundSpices"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#GroundCumin -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#GroundCumin">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#GroundSpices"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#GroundSpices -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#GroundSpices">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#CurryIngredient"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#GroundTurmeric -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#GroundTurmeric">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#GroundSpices"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Hot -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Hot">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Spiciness"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Medium -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Medium">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Spiciness"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Mild -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Mild">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Spiciness"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Naan -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Naan">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Bread"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#NamedCurry -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#NamedCurry">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Curry"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#PreparationType -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#PreparationType">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#ValuePartition"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Salt -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Salt">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#CurryIngredient"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Simmer -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Simmer">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#PreparationType"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Sour -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Sour">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#SweetOrSour"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Spiciness -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Spiciness">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#ValuePartition"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#SpicyCurry -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#SpicyCurry">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Curry"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#hasIngredient"/>
+                        <owl:someValuesFrom>
+                            <owl:Class>
+                                <owl:intersectionOf rdf:parseType="Collection">
+                                    <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#CurryIngredient"/>
+                                    <owl:Restriction>
+                                        <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#hasSpiciness"/>
+                                        <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Hot"/>
+                                    </owl:Restriction>
+                                </owl:intersectionOf>
+                            </owl:Class>
+                        </owl:someValuesFrom>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Stir-Fry -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Stir-Fry">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#PreparationType"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Sugar -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Sugar">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#CurryIngredient"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Sweet -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Sweet">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#SweetOrSour"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#SweetOrSour -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#SweetOrSour">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#ValuePartition"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#TandooriMasala -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#TandooriMasala">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#CurryIngredient"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#ValuePartition -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#ValuePartition"/>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#VeganCurry -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#VeganCurry">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Curry"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#hasCurryIngredient"/>
+                        <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#CurryIngredient"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#VegetarianCurry -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#VegetarianCurry">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Curry"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#hasCurryIngredient"/>
+                        <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#CurryIngredient"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#India -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#India">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Country"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Thailand -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Thailand">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Country"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#United_Kingdom -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#United_Kingdom">
+        <rdf:type rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Country"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // General axioms
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <owl:members rdf:parseType="Collection">
+            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#ChilliPowder"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#GaramMasala"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Garlic"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Ginger"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#GroundAlmonds"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#GroundCoriander"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#GroundCumin"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#GroundTurmeric"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Salt"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Sugar"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#TandooriMasala"/>
+        </owl:members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <owl:members rdf:parseType="Collection">
+            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Extreme"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Hot"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Medium"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/untitled-ontology-4#Mild"/>
+        </owl:members>
+    </rdf:Description>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi -->
+

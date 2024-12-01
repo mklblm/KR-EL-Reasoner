@@ -1,5 +1,6 @@
 from py4j.java_gateway import JavaGateway
 from collections import defaultdict
+from itertools import combinations
 
 # TODO: Need argparser to get the ontology file
 ONTOLOGY_FILE = "pizza.owl"
@@ -85,8 +86,29 @@ def intersect_rule_1(individual, interpretation):
     return changed
             
 
-
 # Intersect rule 2: If d has C intersection D assigned, assign also C intersect D to d
+def intesect_rule_2(individual, interpretation, all_concepts):
+    """
+    For all combinations of concepts in individual, also add the conjunction to the 
+    individual. Only do this if the conjunction appears in the Tbox.
+    """
+    changed = False
+
+    # get all combinations of 2 for the concepts of this individual
+    individual_concepts = list(interpretation[individual])
+    all_combinations = combinations(individual_concepts, 2)
+
+    # create a conjunction for all combinations 
+    for combination in all_combinations:
+        conjunction = elFactory.getConjunction(combination[0], combination[1])
+
+        # assign the conjunction to the individual if it's also in Tbox and not assigned yet
+        if conjunction in all_concepts and not conjunction in interpretation[individual]:
+            interpretation[individual].add(conjunction)
+            changed = True
+    
+    return changed
+
 
 # Exists rules 1: if d has Er.C assigned:
 # E-rule 1.1: If there is an element e with initial concept C assigned, e the r-successor of d.
@@ -103,6 +125,7 @@ def intersect_rule_1(individual, interpretation):
 # 1. start with initial in d_0, assign C_0 to it as initial concept
 initial_concepts = {}
 interpretation = defaultdict(set)
+roles_succesors = defaultdict(set)
 
 # 2. set changed == True
 changed = True

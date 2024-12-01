@@ -13,7 +13,7 @@ parser = gateway.getOWLParser()
 # get a formatter to print in nice DL format
 formatter = gateway.getSimpleDLFormatter()
 
-## --- // ----------------------------------------------------------------------------
+## --- // -----------------------------------------------------------------------------
 ## Ontology parsing
 
 print("Loading the ontology...")
@@ -36,27 +36,28 @@ conceptNames = ontology.getConceptNames()
 # print([formatter.format(x) for x in conceptNames])
 
 
-## --- // ----------------------------------------------------------------------------
+## --- // -----------------------------------------------------------------------------
 ## EL Completion Rules
-# Top Rule
+# Top Rule: add top to every individual
 
-# Intersect 1
+# Intersect rule 1: If d has C intersection D assigned, assign also C and D to d
 
-# Intersect 2
+# Intersect rule 2: If d has C intersection D assigned, assign also C intersect D to d
 
 # Exists rules 1: if d has Er.C assigned:
-# E-rule 1.1:
-# E-rule 1.2:
+# E-rule 1.1: If there is an element e with initial concept C assigned, e the r-successor of d.
+# E-rule 1.2: Otherwise, add a new r-successor to d, and assign to it as initla concept C.
 
-# E-rule 2:
+# E-rule 2: If d has an r-successor with C assigned, add Er.C to d
 
-# Subsumption rule:
+# Subsumption rule: If d has C assigned and C subsumes D, assign D to d
 
 
-## --- // ----------------------------------------------------------------------------
+## --- // -----------------------------------------------------------------------------
 ## EL Completion algorithm to decide whether O entails C subsumes D
 
 # 1. start with initial assignment d_0, assign C_0 to it as initial concept
+
 # 2. set changed == True
 changed = True
 # 3. while changed == True
@@ -73,8 +74,21 @@ while changed:
 # If D_0 was assigned to d_0, return True, else return False
 
 
-# Creating EL concepts and axioms
+
 
 elFactory = gateway.getELFactory()
-elk = gateway.getELKReasoner()
-elk.setOntology(ontology)
+
+conceptA = elFactory.getConceptName("A")
+conceptB = elFactory.getConceptName("B")
+conjunctionAB = elFactory.getConjunction(conceptA, conceptB)
+role = elFactory.getRole("r")
+existential = elFactory.getExistentialRoleRestriction(role,conjunctionAB)
+top = elFactory.getTop()
+conjunction2 = elFactory.getConjunction(top,existential)
+
+gci = elFactory.getGCI(conjunctionAB,conjunction2)
+
+print()
+print()
+print("I made the following GCI:")
+print(formatter.format(gci))

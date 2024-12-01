@@ -75,7 +75,7 @@ def intersect_rule_2(d):
     # Intersect rule 2: If d has C intersection D assigned, assign also C intersect D to d
     pass
 
-def exists_rule_1(individual, interpretation):
+def exists_rule_1(individual, interpretation, initial_concepts, roles_succesors):
     """
     # E-rule 1: If d has Er.C assigned, apply E-rules 1.1 and 1.2
     # E-rule 1.1: If there is an element e with initial concept C assigned, e the r-successor of d.
@@ -89,12 +89,27 @@ def exists_rule_1(individual, interpretation):
     for concept in interpretation[individual]:
         concept_type = concept.getClass().getSimpleName()
 
-        # find conjunctions in individual
+        # "If d has Er.C assigned, apply E-rules 1.1 and 1.2"
         if concept_type == 'ExistentialRoleRestriction':
             current_role = concept_type.role()
             current_filler = concept_type.filler()
-
-    
+            
+            # E-rule 1.1: 
+            # If there is an element e with initial concept C assigned, e the r-successor of d.
+            if current_filler in initial_concepts:
+                roles_succesors[current_role].add((individual, initial_concepts[current_filler]))
+                changed = True
+                
+            # E-rule 1.2: 
+            # Otherwise, add a new r-successor to d, and assign to it as initial concept C.
+            else: 
+                # TODO: resolve this temp fix for indiviual 
+                new_individual = "d_1"
+                roles_succesors[current_role].add((individual, new_individual))
+                interpretation[new_individual].add(current_filler)
+                initial_concepts[current_filler] = new_individual
+                changed = True
+                
     return changed
 
 

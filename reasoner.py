@@ -1,4 +1,5 @@
 from py4j.java_gateway import JavaGateway
+from collections import defaultdict
 
 # TODO: Need argparser to get the ontology file
 ONTOLOGY_FILE = "pizza.owl"
@@ -35,12 +36,35 @@ allConcepts = ontology.getSubConcepts()
 conceptNames = ontology.getConceptNames()
 # print([formatter.format(x) for x in conceptNames])
 
+# to create EL concepts
+elFactory = gateway.getELFactory()
+
+def has_top(all_concepts):
+    for concept in all_concepts:
+        concept_type = concept.getClass().getSimpleName()
+        if concept_type == "TopConcept$":
+             return True
+    
+    return False
+
+ontology_has_top = has_top(allConcepts)
 
 ## --- // -----------------------------------------------------------------------------
 ## EL Completion Rules
 # Top Rule: add top to every individual
+def top_rule(individual, interpretation, ontology_has_top):
+    """
+    Add top to this individual, only if top occurs in tbox.
+    """
+    # not sure yet about this 'ontology_has_top' argument
+    if ontology_has_top:
+        interpretation[individual].add(elFactory.getTop())
+        return True
+    
+    return False
 
 # Intersect rule 1: If d has C intersection D assigned, assign also C and D to d
+
 
 # Intersect rule 2: If d has C intersection D assigned, assign also C intersect D to d
 
@@ -56,7 +80,9 @@ conceptNames = ontology.getConceptNames()
 ## --- // -----------------------------------------------------------------------------
 ## EL Completion algorithm to decide whether O entails C subsumes D
 
-# 1. start with initial assignment d_0, assign C_0 to it as initial concept
+# 1. start with initial in d_0, assign C_0 to it as initial concept
+initial_concepts = {}
+interpretation = defaultdict(set)
 
 # 2. set changed == True
 changed = True

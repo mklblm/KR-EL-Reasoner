@@ -122,10 +122,28 @@ def intesect_rule_2(individual, interpretation, all_concepts):
 ## --- // -----------------------------------------------------------------------------
 ## EL Completion algorithm to decide whether O entails C subsumes D
 
-# 1. start with initial in d_0, assign C_0 to it as initial concept
-initial_concepts = {}
+# replace with chosen subsumee and subsumer as concept classes
+first_individual = 1
+subsumee = 'some_concept'
+subsumer = 'some_concept'
+
+# 1. start with individual d_0, assign C_0 to it as initial concept
+initial_concepts = {subsumee : first_individual}
+blocked_individuals = {}
+
 interpretation = defaultdict(set)
+interpretation[first_individual] = subsumee
+
 roles_succesors = defaultdict(set)
+
+def apply_rules(individual):
+    """
+    A function that will apply all rules to individual
+    """
+    pass
+
+def get_blocked_individuals(interpretation):
+    pass
 
 # 2. set changed == True
 changed = True
@@ -133,11 +151,22 @@ changed = True
 while changed:
     # 3.1. set changed == False
     changed = False
+
     # 3.2. for every element d in the current interpretation:
     # 3.2.1. apply all the rules on d in all possible ways,
     # so that only concepts from the input get assigned
+    for individual in interpretation:
+        if individual in get_blocked_individuals(interpretation):
 
-    # 3.2.2. If a new element was added or a new concept was assigned:
-    # set changed == True
+            # 3.2.2. If a new element was added or a new concept was assigned:
+            # set changed == True
+            changed = apply_rules(individual)
 
 # If D_0 was assigned to d_0, return True, else return False
+if subsumer in interpretation[first_individual]:
+    # return true
+    pass
+else:
+    # return Flase
+    pass
+

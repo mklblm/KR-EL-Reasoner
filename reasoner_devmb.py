@@ -81,7 +81,7 @@ def intersect_rule_2(d):
     pass
 
 
-def exists_rule_1(individual, interpretation, initial_concepts, roles_succesors):
+def exists_rule_1(individual, interpretation, initial_concepts, roles_successors):
     """
     # E-rule 1: If d has Er.C assigned, apply E-rules 1.1 and 1.2
     # E-rule 1.1: If there is an element e with initial concept C assigned, e the r-successor of d.
@@ -89,21 +89,22 @@ def exists_rule_1(individual, interpretation, initial_concepts, roles_succesors)
     """
     changed = False
 
-    current_role = None
-    current_filler = None
-
     for concept in interpretation[individual]:
         concept_type = concept.getClass().getSimpleName()
 
         # "If d has Er.C assigned, apply E-rules 1.1 and 1.2"
         if concept_type == "ExistentialRoleRestriction":
-            current_role = concept_type.role()
-            current_filler = concept_type.filler()
+            role_r = concept.role()  # r of Er.C
+            concept_c = concept.filler()  # C of Er.C
 
             # E-rule 1.1:
-            # If there is an element e with initial concept C assigned, e the r-successor of d.
-            if current_filler in initial_concepts:
-                roles_succesors[current_role].add((individual, initial_concepts[current_filler]))
+            # If there is an element e with initial concept C assigned, e is the r-successor of d.
+            if concept_c in initial_concepts:
+                element_e = initial_concepts[concept_c]
+                # TODO: is this check redundant?
+                if role_r not in roles_successors[individual]:
+                    roles_successors[individual][role_r] = set()
+                roles_successors[individual][role_r].add(element_e)
                 changed = True
 
             # E-rule 1.2:
@@ -111,22 +112,49 @@ def exists_rule_1(individual, interpretation, initial_concepts, roles_succesors)
             else:
                 # TODO: resolve this temp fix for indiviual
                 new_individual = "d_1"
-                roles_succesors[current_role].add((individual, new_individual))
-                interpretation[new_individual].add(current_filler)
-                initial_concepts[current_filler] = new_individual
+                if role_r not in roles_successors[individual]:
+                    roles_successors[individual][role_r] = set()
+                # "add a new r-successor to d"
+                roles_successors[individual][role_r].add(new_individual)
+                # "and assign to it as initial concept C."
+                initial_concepts[concept_c] = new_individual
                 changed = True
 
     return changed
 
 
-def exists_rule_2(d):
+def exists_rule_2(individual, interpretation, initial_concepts, roles_successors):
     # E-rule 2: If d has an r-successor with C assigned, add Er.C to d
-    pass
+    changed = False
+
+    # TODO: I'm not sure if this is correct.
+    for concept in interpretation[individual]:
+        for role in roles_successors[individual]:
+            if concept in roles_successors[individual][role]:
+                interpretation[individual].add(elFactory.getExistentialRoleRestriction(role, concept))
+                changed = True
+
+    return changed
 
 
-def subsumption_rule(d):
+def subsumption_rule(individual, interpretation, allConcepts, axioms):
     # Subsumption rule: If d has C assigned and C subsumes D, assign D to d
-    pass
+    changed = False
+
+    # I tried putting more for-loops in here, i hope this is enough.
+    for concept in interpretation[individual]:
+        for subsumed_concept in allConcepts:
+            for axiom in axioms:
+                axiom_type = axiom.getClass().getSimpleName()
+                if (
+                    axiom_type == "GeneralConceptInclusion"
+                    and axiom.lhs() == concept
+                    and axiom.rhs() == subsumed_concept
+                ):
+                    interpretation[individual].add(subsumed_concept)
+                    changed = True
+
+    return changed
 
 
 ## --- // -----------------------------------------------------------------------------
@@ -144,8 +172,8 @@ initial_concepts = defaultdict(str)
 # interpretation: Key = individual, Value = set of Concepts
 interpretation = defaultdict(set)
 
-# roles_succesors: Key = role, Value = set of tuples if individuals (a,b)
-roles_succesors = defaultdict(set)
+# roles_successors: {individual : {role : {succesors}}}
+roles_successors = defaultdict(defaultdict(set()))
 
 # Assign C to d_0, where C is the CLASS_NAME given at the commandline
 initial_concepts[CLASS_NAME] = d_0

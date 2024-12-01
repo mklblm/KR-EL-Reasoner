@@ -56,7 +56,6 @@ def top_rule(individual, interpretation, ontology_has_top):
     """
     Add top to this individual, only if top occurs in tbox.
     """
-    # not sure yet about this 'ontology_has_top' argument
     if ontology_has_top:
         interpretation[individual].add(elFactory.getTop())
         return True
@@ -64,6 +63,27 @@ def top_rule(individual, interpretation, ontology_has_top):
     return False
 
 # Intersect rule 1: If d has C intersection D assigned, assign also C and D to d
+def intersect_rule_1(individual, interpretation):
+    """
+    Add the conjuncts of all conjunctions assigned to this individual to 
+    the individual as well.
+    """
+    changed = False
+
+    for concept in interpretation[individual]:
+        concept_type = concept.getClass().getSimpleName()
+
+        # find conjunctions in individual
+        if concept_type == 'ConceptConjunction':
+            for conjunct in concept.getConjuncts():
+
+                # assign the conjuncts of this conjunction to individual (if not already present)
+                if not conjunct in interpretation[individual]:
+                    interpretation[individual].add(conjunct)
+                    changed = True
+    
+    return changed
+            
 
 
 # Intersect rule 2: If d has C intersection D assigned, assign also C intersect D to d

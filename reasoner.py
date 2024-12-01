@@ -72,23 +72,3 @@ while changed:
     # set changed == True
 
 # If D_0 was assigned to d_0, return True, else return False
-
-
-
-
-elFactory = gateway.getELFactory()
-
-conceptA = elFactory.getConceptName("A")
-conceptB = elFactory.getConceptName("B")
-conjunctionAB = elFactory.getConjunction(conceptA, conceptB)
-role = elFactory.getRole("r")
-existential = elFactory.getExistentialRoleRestriction(role,conjunctionAB)
-top = elFactory.getTop()
-conjunction2 = elFactory.getConjunction(top,existential)
-
-gci = elFactory.getGCI(conjunctionAB,conjunction2)
-
-print()
-print()
-print("I made the following GCI:")
-print(formatter.format(gci))

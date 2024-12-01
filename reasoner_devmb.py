@@ -1,6 +1,6 @@
 from py4j.java_gateway import JavaGateway
 from collections import defaultdict
-
+from itertools import product
 
 # TODO: Need argparser to get the ontology file
 ONTOLOGY_FILE = "pizza.owl"
@@ -40,12 +40,18 @@ conceptNames = ontology.getConceptNames()
 # allConcepts should be available as a global i guess? 
 allConcepts = ontology.getSubConcepts()
 
-def ontology_has_top(allConcepts):
-    for concept in allConcepts:
-        conceptType = concept.getClass().getSimpleName()
-        if conceptType == "TopConcept$":
-            return True 
+## --- // -----------------------------------------------------------------------------
+## Helper functions for EL Completion Rules
 
+def has_top(all_concepts):
+    for concept in all_concepts:
+        concept_type = concept.getClass().getSimpleName()
+        if concept_type == "TopConcept$":
+             return True
+    
+    return False
+
+ontology_has_top = has_top(allConcepts)
 
 ## --- // -----------------------------------------------------------------------------
 ## EL Completion Rules
@@ -69,12 +75,32 @@ def intersect_rule_2(d):
     # Intersect rule 2: If d has C intersection D assigned, assign also C intersect D to d
     pass
 
-def exists_rule_1(d):
+def exists_rule_1(individual, interpretation):
+    """
     # E-rule 1: If d has Er.C assigned, apply E-rules 1.1 and 1.2
+    # E-rule 1.1: If there is an element e with initial concept C assigned, e the r-successor of d.
+    # E-rule 1.2: Otherwise, add a new r-successor to d, and assign to it as initla concept C.
+    """
+    changed = False
 
-        # E-rule 1.1: If there is an element e with initial concept C assigned, e the r-successor of d.
+    current_role = None
+    current_filler = None
 
-        # E-rule 1.2: Otherwise, add a new r-successor to d, and assign to it as initla concept C.
+    for concept in interpretation[individual]:
+        concept_type = concept.getClass().getSimpleName()
+
+        # find conjunctions in individual
+        if concept_type == 'ExistentialRoleRestriction':
+            current_role = concept_type.role()
+            current_filler = concept_type.filler()
+
+    
+    return changed
+
+
+        
+
+        
    pass
 
 def exists_rule_2(d):
@@ -100,6 +126,9 @@ initial_concepts = defaultdict(str)
 
 # interpretation: Key = individual, Value = set of Concepts
 interpretation = defaultdict(set)
+
+# roles_succesors: Key = role, Value = set of tuples if individuals (a,b)
+roles_succesors = defaultdict(set)
 
 # Assign C to d_0, where C is the CLASS_NAME given at the commandline
 initial_concepts[CLASS_NAME] = d_0

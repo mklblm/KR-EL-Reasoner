@@ -38,14 +38,14 @@ class ELReasoner():
         ### Attributes to keep track of during runs
         # store if ontology has top concept
         self.ontology_contains_top = self.contains_top(self.ontology)
-        self.subsumee = self.elFactory.getConceptName(class_name)
+        self.subsumee = self.el_factory.getConceptName(class_name)
 
         # keep track of last individual added (individuals are integers)
         self.last_individual = 0
         self.initial_concepts = {}
         self.blocked_individuals = set()
         self.interpretation = defaultdict(set)
-        self.roles_successors = defaultdict(defaultdict(set))
+        self.roles_successors = defaultdict(lambda: defaultdict(set))
     
     def contains_top(self, ontology):
         all_concepts = ontology.getSubConcepts()
@@ -62,17 +62,21 @@ class ELReasoner():
         """
         Add top to this individual, only if top occurs in tbox.
         """
-        if self.ontology_contains_top:
-            self.interpretation[individual].add(self.elFactory.getTop())
-            return True
-    
-        return False
+
+        for concept in self.all_concepts:
+            concept_type = concept.getClass().getSimpleName()
+
+            if concept_type == "TopConcept$":
+                self.interpretation[individual].add(concept)
+                break
+
     
     def intersect_rule_1(self, individual):
         """
         Add the conjuncts of all conjunctions assigned to this individual to 
         the individual as well.
         """
+        add_concepts = set()
         changed = False
 
         for concept in self.interpretation[individual]:
@@ -84,8 +88,10 @@ class ELReasoner():
 
                     # assign the conjuncts of this conjunction to individual (if not already present)
                     if not conjunct in self.interpretation[individual]:
-                        self.interpretation[individual].add(conjunct)
+                        add_concepts.add(conjunct)
                         changed = True
+        
+        self.interpretation[individual].update(add_concepts)
         
         return changed
     
@@ -94,6 +100,7 @@ class ELReasoner():
         For all combinations of concepts in individual, also add the conjunction to the 
         individual. Only do this if the conjunction appears in the Tbox.
         """
+        add_concepts = set()
         changed = False
 
         # get all combinations of 2 for the concepts of this individual
@@ -102,13 +109,15 @@ class ELReasoner():
 
         # create a conjunction for all combinations 
         for combination in all_combinations:
-            conjunction = self.elFactory.getConjunction(combination[0], combination[1])
+            conjunction = self.el_factory.getConjunction(combination[0], combination[1])
 
             # assign the conjunction to the individual if it's also in Tbox and not assigned yet
-            if conjunction in self.all_concepts and not conjunction in self.interpretation[individual]:
-                self.interpretation[individual].add(conjunction)
+            if conjunction in self.all_concepts and conjunction not in self.interpretation[individual]:
+                add_concepts.add(conjunction)
                 changed = True
         
+        self.interpretation[individual].update(add_concepts)
+
         return changed
     
     def exists_rule_1(self, individual):
@@ -157,20 +166,24 @@ class ELReasoner():
     
     def exists_rule_2(self, individual):
         # E-rule 2: If d has an r-successor with C assigned, add Er.C to d
+        add_concepts = set()
         changed = False
 
-        for role, successors in self.roles_successors.items():
+        for role, successors in self.roles_successors[individual].items():
             for successor in successors:
-                for concept in successor:
+                for concept in self.interpretation[successor]:
                     existential = self.el_factory.getExistentialRoleRestriction(role, concept)
                     if existential in self.all_concepts and not existential in self.interpretation[individual]:
-                        self.interpretation[individual].add(existential)
+                        add_concepts.add(existential)
                         changed = True
+
+        self.interpretation[individual].update(add_concepts)
 
         return changed
     
     def subsumption_rule(self, individual):
         # Subsumption rule: If d has C assigned and C subsumes D, assign D to d
+        add_concepts = set()
         changed = False
 
         # I tried putting more for-loops in here, i hope this is enough.
@@ -182,8 +195,10 @@ class ELReasoner():
                     and axiom.lhs() == concept
                     and not axiom.rhs() in self.interpretation[individual]
                 ):
-                    self.interpretation[individual].add(axiom.rhs())
+                    add_concepts.add(axiom.rhs())
                     changed = True
+
+        self.interpretation[individual].update(add_concepts)
 
         return changed
 
@@ -198,6 +213,7 @@ class ELReasoner():
                 self.exists_rule_1(individual),
                 self.exists_rule_2(individual),
                 self.subsumption_rule(individual)]
+        print(changes)
         
         return True in changes
 
@@ -216,7 +232,9 @@ class ELReasoner():
     def run(self):
         self.subsumers = []
 
-        for concept in self.all_concepts:
+        for concept in list(self.concept_names):
+            print("New concept")
+            print(self.formatter.format(concept))
             # reset attributes for this concept
             subsumer = concept
             self.first_individual = 1
@@ -224,7 +242,10 @@ class ELReasoner():
             self.initial_concepts = {}
             self.blocked_individuals = set()
             self.interpretation = defaultdict(set)
-            self.role_successors = defaultdict(defaultdict(set))
+            self.roles_successors = defaultdict(lambda: defaultdict(set))
+
+            # 1. add initial indivdiual
+            self.interpretation[self.first_individual].add(self.subsumee)
 
             # 2. set changed == True
             changed = True
@@ -236,7 +257,7 @@ class ELReasoner():
                 # 3.2. for every element d in the current interpretation:
                 # 3.2.1. apply all the rules on d in all possible ways,
                 # so that only concepts from the input get assigned
-                for individual in self.interpretation:
+                for individual in list(self.interpretation.keys()):
                     if not individual in self.get_blocked_individuals():
 
                         # 3.2.2. If a new element was added or a new concept was assigned:
@@ -246,6 +267,7 @@ class ELReasoner():
             # If D_0 was assigned to d_0, return True, else return False
             if subsumer in self.interpretation[self.first_individual]:
                 self.subsumers.append(subsumer)
+            print(self.subsumers)
 
         return self.subsumers
 

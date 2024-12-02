@@ -45,7 +45,7 @@ class ELReasoner():
         self.initial_concepts = {}
         self.blocked_individuals = set()
         self.interpretation = defaultdict(set)
-        self.role_successors = defaultdict(defaultdict(set))
+        self.roles_successors = defaultdict(defaultdict(set))
     
     def contains_top(self, ontology):
         all_concepts = ontology.getSubConcepts()
@@ -111,14 +111,107 @@ class ELReasoner():
         
         return changed
     
+    def exists_rule_1(self, individual):
+        """
+        # E-rule 1: If d has Er.C assigned, apply E-rules 1.1 and 1.2
+        # E-rule 1.1: If there is an element e with initial concept C assigned, e the r-successor of d.
+        # E-rule 1.2: Otherwise, add a new r-successor to d, and assign to it as initla concept C.
+        """
+        changed = False
+
+        for concept in self.interpretation[individual]:
+            concept_type = concept.getClass().getSimpleName()
+
+            # "If d has Er.C assigned, apply E-rules 1.1 and 1.2"
+            if concept_type == "ExistentialRoleRestriction":
+                role_r = concept.role()  # r of Er.C
+                concept_c = concept.filler()  # C of Er.C
+
+                # E-rule 1.1:
+                # If there is an element e with initial concept C assigned, e is the r-successor of d.
+                if concept_c in self.initial_concepts:
+                    element_e = self.initial_concepts[concept_c]
+                    # TODO: is this check redundant?
+                    if role_r not in self.roles_successors[individual]:
+                        self.roles_successors[individual][role_r] = set()
+
+                    # only add the element if not already assigned
+                    if not element_e in self.roles_successors[individual][role_r]:
+                        self.roles_successors[individual][role_r].add(element_e)
+                        changed = True
+
+                # E-rule 1.2:
+                # Otherwise, add a new r-successor to d, and assign to it as initial concept C.
+                else:
+                    # TODO: resolve this temp fix for indiviual
+                    self.last_individual += 1
+                    if role_r not in self.roles_successors[individual]:
+                        self.roles_successors[individual][role_r] = set()
+                    # "add a new r-successor to d"
+                    self.roles_successors[individual][role_r].add(self.last_individual)
+                    # "and assign to it as initial concept C."
+                    self.initial_concepts[concept_c] = self.last_individual
+                    changed = True
+
+        return changed
+    
+    def exists_rule_2(self, individual):
+        # E-rule 2: If d has an r-successor with C assigned, add Er.C to d
+        changed = False
+
+        for role, successors in self.roles_successors.items():
+            for successor in successors:
+                for concept in successor:
+                    existential = self.el_factory.getExistentialRoleRestriction(role, concept)
+                    if existential in self.all_concepts and not existential in self.interpretation[individual]:
+                        self.interpretation[individual].add(existential)
+                        changed = True
+
+        return changed
+    
+    def subsumption_rule(self, individual):
+        # Subsumption rule: If d has C assigned and C subsumes D, assign D to d
+        changed = False
+
+        # I tried putting more for-loops in here, i hope this is enough.
+        for concept in self.interpretation[individual]:
+            for axiom in self.axioms:
+                axiom_type = axiom.getClass().getSimpleName()
+                if (
+                    axiom_type == "GeneralConceptInclusion"
+                    and axiom.lhs() == concept
+                    and not axiom.rhs() in self.interpretation[individual]
+                ):
+                    self.interpretation[individual].add(axiom.rhs())
+                    changed = True
+
+        return changed
+
+        
     def apply_rules(self, individual):
         """
         A function that will apply all rules to individual
         """
-        pass
+        changes = [self.top_rule(individual),
+                self.intersect_rule_1(individual),
+                self.intesect_rule_2(individual),
+                self.exists_rule_1(individual),
+                self.exists_rule_2(individual),
+                self.subsumption_rule(individual)]
+        
+        return True in changes
 
-    def get_blocked_individuals(self, interpretation):
-        pass
+    def get_blocked_individuals(self):
+        """
+        Function will check which individuals are blocked, and return this set.
+        """
+        for ind1, concepts1 in self.interpretation.items():
+            for ind2, concepts2 in self.interpretation.items():
+                if ind2 < ind1 and concepts1.issubset(concepts2):
+                    self.blocked_individuals.add(ind1)
+
+        return self.blocked_individuals
+
 
     def run(self):
         self.subsumers = []
@@ -144,7 +237,7 @@ class ELReasoner():
                 # 3.2.1. apply all the rules on d in all possible ways,
                 # so that only concepts from the input get assigned
                 for individual in self.interpretation:
-                    if individual in self.get_blocked_individuals(self.interpretation):
+                    if not individual in self.get_blocked_individuals():
 
                         # 3.2.2. If a new element was added or a new concept was assigned:
                         # set changed == True

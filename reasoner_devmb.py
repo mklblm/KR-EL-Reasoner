@@ -59,11 +59,11 @@ ontology_has_top = has_top(allConcepts)
 ## EL Completion Rules
 
 
-def top_rule(individual, interpretation):
+# Top Rule: add top to every individual
+def top_rule(individual, interpretation, ontology_has_top):
     """
     Add top to this individual, only if top occurs in tbox.
     """
-    # not sure yet about this 'ontology_has_top' argument
     if ontology_has_top:
         interpretation[individual].add(elFactory.getTop())
         return True
@@ -71,14 +71,50 @@ def top_rule(individual, interpretation):
     return False
 
 
-def intersect_rule_1(d):
-    # Intersect rule 1: If d has C intersection D assigned, assign also C and D to d
-    pass
+# Intersect rule 1: If d has C intersection D assigned, assign also C and D to d
+def intersect_rule_1(individual, interpretation):
+    """
+    Add the conjuncts of all conjunctions assigned to this individual to
+    the individual as well.
+    """
+    changed = False
+
+    for concept in interpretation[individual]:
+        concept_type = concept.getClass().getSimpleName()
+
+        # find conjunctions in individual
+        if concept_type == "ConceptConjunction":
+            for conjunct in concept.getConjuncts():
+                # assign the conjuncts of this conjunction to individual (if not already present)
+                if conjunct not in interpretation[individual]:
+                    interpretation[individual].add(conjunct)
+                    changed = True
+
+    return changed
 
 
-def intersect_rule_2(d):
-    # Intersect rule 2: If d has C intersection D assigned, assign also C intersect D to d
-    pass
+# Intersect rule 2: If d has C intersection D assigned, assign also C intersect D to d
+def intersect_rule_2(individual, interpretation, all_concepts):
+    """
+    For all combinations of concepts in individual, also add the conjunction to the
+    individual. Only do this if the conjunction appears in the Tbox.
+    """
+    changed = False
+
+    # get all combinations of 2 for the concepts of this individual
+    individual_concepts = list(interpretation[individual])
+    all_combinations = combinations(individual_concepts, 2)
+
+    # create a conjunction for all combinations
+    for combination in all_combinations:
+        conjunction = elFactory.getConjunction(combination[0], combination[1])
+
+        # assign the conjunction to the individual if it's also in Tbox and not assigned yet
+        if conjunction in all_concepts and conjunction not in interpretation[individual]:
+            interpretation[individual].add(conjunction)
+            changed = True
+
+    return changed
 
 
 def exists_rule_1(individual, interpretation, initial_concepts, roles_successors):

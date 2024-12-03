@@ -285,7 +285,13 @@ class ELReasoner:
                 self.subsumers.append(concept)
 
         # print the subsumers
-        print(f"{self.subsumee} Subsumers: {[self.formatter.format(x) for x in self.subsumers]}")
+        for x in self.subsumers:
+            # Indexing to remove parentheses from print statement.
+            print(self.formatter.format(x)[1:-1])
+            # Note how this thing also prints "None" as the last subsumer, i assume this is Top.
+
+        # TODO: Remove this debugging code
+        # print(f"{self.subsumee} Subsumers: {[self.formatter.format(x) for x in self.subsumers]}")
         # print execution time
-        print(f"Total execution time: {perf_counter() - start_time:.4f} seconds")
-        return self.subsumers
+        # print(f"Total execution time: {perf_counter() - start_time:.4f} seconds")
+        # return self.subsumers

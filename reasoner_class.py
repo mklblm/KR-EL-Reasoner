@@ -39,6 +39,8 @@ class ELReasoner():
         # store if ontology has top concept
         self.ontology_contains_top = self.contains_top(self.ontology)
         self.subsumee = self.el_factory.getConceptName(class_name)
+        self.GCIs = self.get_GCIs()
+
 
         # keep track of last individual added (individuals are integers)
         self.last_individual = 0
@@ -46,6 +48,16 @@ class ELReasoner():
         self.blocked_individuals = set()
         self.interpretation = defaultdict(set)
         self.roles_successors = defaultdict(lambda: defaultdict(set))
+
+    def get_GCIs(self):
+        GCIs = defaultdict(set)
+
+        for axiom in self.axioms:
+            axiom_type = axiom.getClass().getSimpleName()
+            if axiom_type == "GeneralConceptInclusion":
+                GCIs[axiom.lhs()].add(axiom.rhs())
+        
+        return GCIs
     
     def contains_top(self, ontology):
         all_concepts = ontology.getSubConcepts()
@@ -183,22 +195,19 @@ class ELReasoner():
     
     def subsumption_rule(self, individual):
         # Subsumption rule: If d has C assigned and C subsumes D, assign D to d
+        previous_len = len(self.interpretation[individual])
         add_concepts = set()
         changed = False
-
-        # I tried putting more for-loops in here, i hope this is enough.
+        
         for concept in self.interpretation[individual]:
-            for axiom in self.axioms:
-                axiom_type = axiom.getClass().getSimpleName()
-                if (
-                    axiom_type == "GeneralConceptInclusion"
-                    and axiom.lhs() == concept
-                    and not axiom.rhs() in self.interpretation[individual]
-                ):
-                    add_concepts.add(axiom.rhs())
-                    changed = True
-
+            add_concepts.update(self.GCIs[concept])
+        
         self.interpretation[individual].update(add_concepts)
+        
+        current_len = len(self.interpretation[individual])
+
+        if current_len > previous_len:
+            changed = True
 
         return changed
 

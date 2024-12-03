@@ -41,6 +41,7 @@ class ELReasoner:
         self.ontology_contains_top = self.contains_top(self.ontology)
         self.top_rule_run = False
         self.subsumee = self.el_factory.getConceptName(class_name)
+        self.GCIs = self.get_GCIs()
 
         # keep track of last individual added (individuals are integers)
         self.last_individual = 0
@@ -66,6 +67,17 @@ class ELReasoner:
                 return True
 
         return False
+    
+    def get_GCIs(self):
+        GCIs = defaultdict(set)
+
+        for axiom in self.axioms:
+            axiom_type = axiom.getClass().getSimpleName()
+            if axiom_type == "GeneralConceptInclusion":
+                GCIs[axiom.lhs()].add(axiom.rhs())
+        
+        return GCIs
+                
 
     def top_rule(self, individual):
         """
@@ -182,21 +194,19 @@ class ELReasoner:
 
     def subsumption_rule(self, individual, concept):
         # Subsumption rule: If d has C assigned and C subsumes D, assign D to d
+        previous_len = len(self.interpretation[individual])
         add_concepts = set()
         changed = False
-
-        # I tried putting more for-loops in here, i hope this is enough.
-        for axiom in self.axioms:
-            axiom_type = axiom.getClass().getSimpleName()
-            if (
-                axiom_type == "GeneralConceptInclusion"
-                and axiom.lhs() == concept
-                and axiom.rhs() not in self.interpretation[individual]
-            ):
-                add_concepts.add(axiom.rhs())
-                changed = True
-
+        
+        for concept in self.interpretation[individual]:
+            add_concepts.update(self.GCIs[concept])
+        
         self.interpretation[individual].update(add_concepts)
+        
+        current_len = len(self.interpretation[individual])
+
+        if current_len > previous_len:
+            changed = True
 
         return changed
 

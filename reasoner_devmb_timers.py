@@ -40,6 +40,7 @@ class ELReasoner:
         # store if ontology has top concept
         self.ontology_contains_top = self.contains_top(self.ontology)
         self.top_rule_run = False
+        self.top = self.contains_top(self.ontology)
         self.subsumee = self.el_factory.getConceptName(class_name)
         self.GCIs = self.get_GCIs()
 
@@ -64,7 +65,7 @@ class ELReasoner:
             concept_type = concept.getClass().getSimpleName()
 
             if concept_type == "TopConcept$":
-                return True
+                return concept
 
         return False
     
@@ -75,6 +76,11 @@ class ELReasoner:
             axiom_type = axiom.getClass().getSimpleName()
             if axiom_type == "GeneralConceptInclusion":
                 GCIs[axiom.lhs()].add(axiom.rhs())
+            elif axiom_type == "EquivalenceAxiom":
+                axiom_concepts = axiom.getConcepts().toArray()
+                GCIs[axiom_concepts[0]].add(axiom_concepts[1])
+                GCIs[axiom_concepts[1]].add(axiom_concepts[0])
+
         
         return GCIs
                 
@@ -83,13 +89,9 @@ class ELReasoner:
         """
         Add top to this individual, only if top occurs in tbox.
         """
-
-        for concept in self.all_concepts:
-            concept_type = concept.getClass().getSimpleName()
-
-            if concept_type == "TopConcept$":
-                self.interpretation[individual].add(concept)
-                break
+        if self.top:
+            self.interpretation[individual].add(self.top)
+            return False
 
     def intersect_rule_1(self, individual, concept):
         """
@@ -171,6 +173,7 @@ class ELReasoner:
             self.roles_successors[individual][role_r].add(self.last_individual)
             # "and assign to it as initial concept C."
             self.initial_concepts[concept_c] = self.last_individual
+            self.interpretation[self.last_individual].add(concept_c)
             changed = True
 
         return changed
@@ -285,6 +288,7 @@ class ELReasoner:
             self.blocked_individuals = set()
             self.interpretation = defaultdict(set)
             self.roles_successors = defaultdict(lambda: defaultdict(set))
+            self.top_rule_run = False
 
             # 1. add initial indivdiual
             self.interpretation[self.first_individual].add(self.subsumee)
@@ -304,6 +308,8 @@ class ELReasoner:
                         # 3.2.2. If a new element was added or a new concept was assigned:
                         # set changed == True
                         changed = self.apply_rules(individual)
+                
+                    # print(f"{individual}: {[self.formatter.format(x) for x in self.interpretation[self.first_individual]]}")
 
             # If D_0 was assigned to d_0, return True, else return False
             if subsumer in self.interpretation[self.first_individual]:

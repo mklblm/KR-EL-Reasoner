@@ -7,7 +7,6 @@ from py4j.java_gateway import JavaGateway
 class ELReasoner:
     def __init__(self, ontology_file, class_name) -> None:
         ## Setup java gateway and load the ontology
-        # connect to the java gateway of dl4python
         self.gateway = JavaGateway()
 
         # get a parser from OWL files to DL ontologies
@@ -35,9 +34,7 @@ class ELReasoner:
         # to create EL concepts
         self.el_factory = self.gateway.getELFactory()
 
-        ### Attributes to keep track of during runs
-        # store if ontology has top concept
-        self.ontology_contains_top = self.contains_top(self.ontology)
+        # Attributes to keep track of during runs
         self.top_rule_run = False
         self.top = self.contains_top(self.ontology)
         self.subsumee = self.el_factory.getConceptName(class_name)
@@ -49,13 +46,6 @@ class ELReasoner:
         self.blocked_individuals = set()
         self.interpretation = defaultdict(set)
         self.roles_successors = defaultdict(lambda: defaultdict(set))
-
-        # Storing the total execution time of rules
-        self.time_intersect_1 = 0
-        self.time_intersect_2 = 0
-        self.time_exists_1 = 0
-        self.time_exists_2 = 0
-        self.time_subsumption = 0
 
     def contains_top(self, ontology):
         all_concepts = ontology.getSubConcepts()
@@ -119,7 +109,7 @@ class ELReasoner:
 
         # get all combinations of 2 for the concepts of this individual
         individual_concepts = list(self.interpretation[individual])
-        # Don't need to check for combinations with itself.
+        # Don't need to check for combinations of individual with itself
         all_combinations = [(concept, ind) for ind in individual_concepts if ind != concept]
 
         # create a conjunction for all combinations
@@ -139,7 +129,7 @@ class ELReasoner:
         """
         # E-rule 1: If d has Er.C assigned, apply E-rules 1.1 and 1.2
         # E-rule 1.1: If there is an element e with initial concept C assigned, e the r-successor of d.
-        # E-rule 1.2: Otherwise, add a new r-successor to d, and assign to it as initla concept C.
+        # E-rule 1.2: Otherwise, add a new r-successor to d, and assign to it as initial concept C.
         """
         changed = False
 
@@ -151,7 +141,6 @@ class ELReasoner:
         # If there is an element e with initial concept C assigned, e is the r-successor of d.
         if concept_c in self.initial_concepts:
             element_e = self.initial_concepts[concept_c]
-            # TODO: is this check redundant?
             if role_r not in self.roles_successors[individual]:
                 self.roles_successors[individual][role_r] = set()
 
@@ -231,7 +220,6 @@ class ELReasoner:
                 changes.append(self.intersect_rule_1(individual, concept))
 
             # Intersect rule 2
-            # Doubtful if this optim does much, but it's worth a try.
             changes.append(self.intersect_rule_2(individual, concept))
 
             # Exists rule 2
@@ -243,7 +231,6 @@ class ELReasoner:
 
         # Exists rule 2 (Unchanged - not dependent on concepts in individual)
         changes.append(self.exists_rule_2(individual))
-        # print(changes)
 
         return True in changes
 
@@ -260,6 +247,7 @@ class ELReasoner:
 
     def run(self):
         self.subsumers = []
+        
         # Track execution time
         start_time = perf_counter()
 

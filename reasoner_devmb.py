@@ -40,7 +40,8 @@ class ELReasoner:
         self.GCIs = self.get_GCIs()
 
         # keep track of last individual added (individuals are integers)
-        self.last_individual = 0
+        self.first_individual = 1
+        self.last_individual = 1
         self.initial_concepts = {}
         self.blocked_individuals = set()
         self.interpretation = defaultdict(set)
@@ -247,14 +248,6 @@ class ELReasoner:
 
         # Track execution time
         start_time = perf_counter()
-
-        # reset attributes for this concept
-        self.first_individual = 1
-        self.last_individual = 1
-        self.initial_concepts = {}
-        self.blocked_individuals = set()
-        self.interpretation = defaultdict(set)
-        self.roles_successors = defaultdict(lambda: defaultdict(set))
 
         # 1. add initial indivdiual
         self.interpretation[self.first_individual].add(self.subsumee)

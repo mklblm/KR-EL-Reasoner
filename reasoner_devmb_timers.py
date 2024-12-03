@@ -276,44 +276,46 @@ class ELReasoner:
         self.subsumers = []
         # Track execution time
         start_time = perf_counter()
+
+        # reset attributes for this concept
+        self.first_individual = 1
+        self.last_individual = 1
+        self.initial_concepts = {}
+        self.blocked_individuals = set()
+        self.interpretation = defaultdict(set)
+        self.roles_successors = defaultdict(lambda: defaultdict(set))
+        self.top_rule_run = False
+
+        # 1. add initial indivdiual
+        self.interpretation[self.first_individual].add(self.subsumee)
+
+        # 2. set changed == True
+        changed = True
+        # 3. while changed == True
+        while changed:
+            # 3.1. set changed == False
+            changed = False
+
+            # 3.2. for every element d in the current interpretation:
+            # 3.2.1. apply all the rules on d in all possible ways,
+            # so that only concepts from the input get assigned
+            for individual in list(self.interpretation.keys()):
+                if individual not in self.get_blocked_individuals():
+                    # 3.2.2. If a new element was added or a new concept was assigned:
+                    # set changed == True
+                    changed = self.apply_rules(individual)
+            
+                # print(f"{individual}: {[self.formatter.format(x) for x in self.interpretation[self.first_individual]]}")
+
+
         # There's a few ways to implement tqdm progress bar, this keeps it at the bottom.
         for concept in tqdm(list(self.concept_names), desc="Processing concepts", leave=True):
             # print(f"Current execution time: {perf_counter() - start_time:.4f}")
             tqdm.write(f"Found concept: {self.formatter.format(concept)}")
-            # reset attributes for this concept
-            subsumer = concept
-            self.first_individual = 1
-            self.last_individual = 1
-            self.initial_concepts = {}
-            self.blocked_individuals = set()
-            self.interpretation = defaultdict(set)
-            self.roles_successors = defaultdict(lambda: defaultdict(set))
-            self.top_rule_run = False
-
-            # 1. add initial indivdiual
-            self.interpretation[self.first_individual].add(self.subsumee)
-
-            # 2. set changed == True
-            changed = True
-            # 3. while changed == True
-            while changed:
-                # 3.1. set changed == False
-                changed = False
-
-                # 3.2. for every element d in the current interpretation:
-                # 3.2.1. apply all the rules on d in all possible ways,
-                # so that only concepts from the input get assigned
-                for individual in list(self.interpretation.keys()):
-                    if individual not in self.get_blocked_individuals():
-                        # 3.2.2. If a new element was added or a new concept was assigned:
-                        # set changed == True
-                        changed = self.apply_rules(individual)
-                
-                    # print(f"{individual}: {[self.formatter.format(x) for x in self.interpretation[self.first_individual]]}")
 
             # If D_0 was assigned to d_0, return True, else return False
-            if subsumer in self.interpretation[self.first_individual]:
-                self.subsumers.append(subsumer)
+            if concept in self.interpretation[self.first_individual]:
+                self.subsumers.append(concept)
 
         # print the subsumers
         print(f"{self.subsumee} Subsumers: {[self.formatter.format(x) for x in self.subsumers]}")

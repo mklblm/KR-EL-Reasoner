@@ -35,7 +35,6 @@ class ELReasoner:
         self.el_factory = self.gateway.getELFactory()
 
         # Attributes to keep track of during runs
-        self.top_rule_run = False
         self.top = self.contains_top(self.ontology)
         self.subsumee = self.el_factory.getConceptName(class_name)
         self.GCIs = self.get_GCIs()
@@ -205,10 +204,9 @@ class ELReasoner:
         """
         changes = []
 
-        # top_rule has to run only once - it's only dependent on original tbox
-        if not self.top_rule_run:
+        # top rule only applies if top in tbox:
+        if self.top:
             changes.append(self.top_rule(individual))
-            self.top_rule_run = True
 
         # all the rules that depend on for concept in interpretation[individual]:
         # Casting this to a list to fix a bug where the set was modified during iteration.
@@ -247,7 +245,7 @@ class ELReasoner:
 
     def run(self):
         self.subsumers = []
-        
+
         # Track execution time
         start_time = perf_counter()
 
@@ -258,7 +256,6 @@ class ELReasoner:
         self.blocked_individuals = set()
         self.interpretation = defaultdict(set)
         self.roles_successors = defaultdict(lambda: defaultdict(set))
-        self.top_rule_run = False
 
         # 1. add initial indivdiual
         self.interpretation[self.first_individual].add(self.subsumee)

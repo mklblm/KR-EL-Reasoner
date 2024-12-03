@@ -299,14 +299,18 @@ class ELReasoner:
             # 3.2. for every element d in the current interpretation:
             # 3.2.1. apply all the rules on d in all possible ways,
             # so that only concepts from the input get assigned
+            changes = set()
+        
             for individual in list(self.interpretation.keys()):
                 if individual not in self.get_blocked_individuals():
                     # 3.2.2. If a new element was added or a new concept was assigned:
                     # set changed == True
-                    changed = self.apply_rules(individual)
-            
-                # print(f"{individual}: {[self.formatter.format(x) for x in self.interpretation[self.first_individual]]}")
+                    changes.add(self.apply_rules(individual))
 
+                    # print(f"{individual}: {[self.formatter.format(x) for x in self.interpretation[self.first_individual]]}")
+
+            changed = True in changes
+        
 
         # There's a few ways to implement tqdm progress bar, this keeps it at the bottom.
         for concept in tqdm(list(self.concept_names), desc="Processing concepts", leave=True):

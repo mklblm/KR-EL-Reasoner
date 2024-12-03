@@ -249,7 +249,7 @@ class ELReasoner:
         # There's a few ways to implement tqdm progress bar, this keeps it at the bottom.
         for concept in tqdm(list(self.concept_names), desc="Processing concepts", leave=True):
             # print(f"Current execution time: {perf_counter() - start_time:.4f}")
-            tqdm.write(f"New concept: {self.formatter.format(concept)}")
+            tqdm.write(f"Found concept: {self.formatter.format(concept)}")
             # reset attributes for this concept
             subsumer = concept
             self.first_individual = 1
@@ -281,8 +281,9 @@ class ELReasoner:
             # If D_0 was assigned to d_0, return True, else return False
             if subsumer in self.interpretation[self.first_individual]:
                 self.subsumers.append(subsumer)
-            tqdm.write(f"Subsumers: {self.subsumers}")
 
+        # print the subsumers
+        print(f"{self.subsumee} Subsumers: {[self.formatter.format(x) for x in self.subsumers]}")
         total_time = perf_counter() - start_time
         minutes, seconds = divmod(total_time, 60)
         print(f"Total execution time: {int(minutes)} min {seconds:.4f} sec")

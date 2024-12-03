@@ -41,6 +41,7 @@ class ELReasoner:
         self.ontology_contains_top = self.contains_top(self.ontology)
         self.top_rule_run = False
         self.subsumee = self.el_factory.getConceptName(class_name)
+        self.GCIs = self.get_GCIs()
 
         # keep track of last individual added (individuals are integers)
         self.last_individual = 0
@@ -59,6 +60,16 @@ class ELReasoner:
                 return True
 
         return False
+
+    def get_GCIs(self):
+        GCIs = defaultdict(set)
+
+        for axiom in self.axioms:
+            axiom_type = axiom.getClass().getSimpleName()
+            if axiom_type == "GeneralConceptInclusion":
+                GCIs[axiom.lhs()].add(axiom.rhs())
+
+        return GCIs
 
     def top_rule(self, individual):
         """
@@ -175,21 +186,19 @@ class ELReasoner:
 
     def subsumption_rule(self, individual, concept):
         # Subsumption rule: If d has C assigned and C subsumes D, assign D to d
+        previous_len = len(self.interpretation[individual])
         add_concepts = set()
         changed = False
 
-        # I tried putting more for-loops in here, i hope this is enough.
-        for axiom in self.axioms:
-            axiom_type = axiom.getClass().getSimpleName()
-            if (
-                axiom_type == "GeneralConceptInclusion"
-                and axiom.lhs() == concept
-                and axiom.rhs() not in self.interpretation[individual]
-            ):
-                add_concepts.add(axiom.rhs())
-                changed = True
+        for concept in self.interpretation[individual]:
+            add_concepts.update(self.GCIs[concept])
 
         self.interpretation[individual].update(add_concepts)
+
+        current_len = len(self.interpretation[individual])
+
+        if current_len > previous_len:
+            changed = True
 
         return changed
 
@@ -249,7 +258,7 @@ class ELReasoner:
         # There's a few ways to implement tqdm progress bar, this keeps it at the bottom.
         for concept in tqdm(list(self.concept_names), desc="Processing concepts", leave=True):
             # print(f"Current execution time: {perf_counter() - start_time:.4f}")
-            tqdm.write(f"Found concept: {self.formatter.format(concept)}")
+            # tqdm.write(f"Found concept: {self.formatter.format(concept)}")
             # reset attributes for this concept
             subsumer = concept
             self.first_individual = 1
@@ -284,7 +293,5 @@ class ELReasoner:
 
         # print the subsumers
         print(f"{self.subsumee} Subsumers: {[self.formatter.format(x) for x in self.subsumers]}")
-        total_time = perf_counter() - start_time
-        minutes, seconds = divmod(total_time, 60)
-        print(f"Total execution time: {int(minutes)} min {seconds:.4f} sec")
+        print(f"Total execution time: {perf_counter() - start_time:.4f} seconds")
         return self.subsumers

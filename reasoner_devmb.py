@@ -1,6 +1,8 @@
 from collections import defaultdict
+from time import perf_counter
 
 from py4j.java_gateway import JavaGateway
+from tqdm import tqdm
 
 
 class ELReasoner:
@@ -225,7 +227,6 @@ class ELReasoner:
 
         # Exists rule 2 (Unchanged - not dependent on concepts in individual)
         changes.append(self.exists_rule_2(individual))
-
         # print(changes)
 
         return True in changes
@@ -243,9 +244,12 @@ class ELReasoner:
 
     def run(self):
         self.subsumers = []
-
-        for concept in list(self.concept_names):
-            print(f"New concept: {self.formatter.format(concept)}")
+        # Track execution time
+        start_time = perf_counter()
+        # There's a few ways to implement tqdm progress bar, this keeps it at the bottom.
+        for concept in tqdm(list(self.concept_names), desc="Processing concepts", leave=True):
+            # print(f"Current execution time: {perf_counter() - start_time:.4f}")
+            tqdm.write(f"New concept: {self.formatter.format(concept)}")
             # reset attributes for this concept
             subsumer = concept
             self.first_individual = 1
@@ -277,6 +281,9 @@ class ELReasoner:
             # If D_0 was assigned to d_0, return True, else return False
             if subsumer in self.interpretation[self.first_individual]:
                 self.subsumers.append(subsumer)
-            print(self.subsumers)
+            tqdm.write(f"Subsumers: {self.subsumers}")
 
+        total_time = perf_counter() - start_time
+        minutes, seconds = divmod(total_time, 60)
+        print(f"Total execution time: {int(minutes)} min {seconds:.4f} sec")
         return self.subsumers

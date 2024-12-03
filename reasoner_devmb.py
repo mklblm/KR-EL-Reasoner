@@ -1,5 +1,4 @@
 from collections import defaultdict
-from itertools import combinations
 
 from py4j.java_gateway import JavaGateway
 
@@ -38,14 +37,15 @@ class ELReasoner:
         ### Attributes to keep track of during runs
         # store if ontology has top concept
         self.ontology_contains_top = self.contains_top(self.ontology)
-        self.subsumee = self.elFactory.getConceptName(class_name)
+        self.top_rule_run = False
+        self.subsumee = self.el_factory.getConceptName(class_name)
 
         # keep track of last individual added (individuals are integers)
         self.last_individual = 0
         self.initial_concepts = {}
         self.blocked_individuals = set()
         self.interpretation = defaultdict(set)
-        self.role_successors = defaultdict(defaultdict(set))
+        self.roles_successors = defaultdict(lambda: defaultdict(set))
 
     def contains_top(self, ontology):
         all_concepts = ontology.getSubConcepts()
@@ -58,62 +58,64 @@ class ELReasoner:
 
         return False
 
-    # Top Rule: add top to every individual
     def top_rule(self, individual):
         """
         Add top to this individual, only if top occurs in tbox.
         """
-        if self.ontology_contains_top:
-            self.interpretation[individual].add(self.elFactory.getTop())
-            return True
 
-        return False
+        for concept in self.all_concepts:
+            concept_type = concept.getClass().getSimpleName()
 
-    # Intersect rule 1: If d has C intersection D assigned, assign also C and D to d
-    def intersect_rule_1(self, individual):
+            if concept_type == "TopConcept$":
+                self.interpretation[individual].add(concept)
+                break
+
+    def intersect_rule_1(self, individual, concept):
         """
         Add the conjuncts of all conjunctions assigned to this individual to
         the individual as well.
         """
+        add_concepts = set()
         changed = False
 
-        for concept in self.interpretation[individual]:
-            concept_type = concept.getClass().getSimpleName()
+        # find conjunctions in individual
+        for conjunct in concept.getConjuncts():
+            # assign the conjuncts of this conjunction to individual (if not already present)
+            if conjunct not in self.interpretation[individual]:
+                add_concepts.add(conjunct)
+                changed = True
 
-            # find conjunctions in individual
-            if concept_type == "ConceptConjunction":
-                for conjunct in concept.getConjuncts():
-                    # assign the conjuncts of this conjunction to individual (if not already present)
-                    if conjunct not in self.interpretation[individual]:
-                        self.interpretation[individual].add(conjunct)
-                        changed = True
+        self.interpretation[individual].update(add_concepts)
 
         return changed
 
-    # Intersect rule 2: If d has C intersection D assigned, assign also C intersect D to d
-    def intersect_rule_2(self, individual):
+    def intersect_rule_2(self, individual, concept):
         """
         For all combinations of concepts in individual, also add the conjunction to the
         individual. Only do this if the conjunction appears in the Tbox.
         """
+        add_concepts = set()
         changed = False
 
         # get all combinations of 2 for the concepts of this individual
         individual_concepts = list(self.interpretation[individual])
-        all_combinations = combinations(individual_concepts, 2)
+        # Don't need to check for combinations with itself.
+        all_combinations = [(concept, ind) for ind in individual_concepts if ind != concept]
 
         # create a conjunction for all combinations
         for combination in all_combinations:
-            conjunction = self.elFactory.getConjunction(combination[0], combination[1])
+            conjunction = self.el_factory.getConjunction(combination[0], combination[1])
 
             # assign the conjunction to the individual if it's also in Tbox and not assigned yet
             if conjunction in self.all_concepts and conjunction not in self.interpretation[individual]:
-                self.interpretation[individual].add(conjunction)
+                add_concepts.add(conjunction)
                 changed = True
+
+        self.interpretation[individual].update(add_concepts)
 
         return changed
 
-    def exists_rule_1(self, individual):
+    def exists_rule_1(self, individual, concept):
         """
         # E-rule 1: If d has Er.C assigned, apply E-rules 1.1 and 1.2
         # E-rule 1.1: If there is an element e with initial concept C assigned, e the r-successor of d.
@@ -121,68 +123,71 @@ class ELReasoner:
         """
         changed = False
 
-        for concept in self.interpretation[individual]:
-            concept_type = concept.getClass().getSimpleName()
+        # "If d has Er.C assigned, apply E-rules 1.1 and 1.2"
+        role_r = concept.role()  # r of Er.C
+        concept_c = concept.filler()  # C of Er.C
 
-            # "If d has Er.C assigned, apply E-rules 1.1 and 1.2"
-            if concept_type == "ExistentialRoleRestriction":
-                role_r = concept.role()  # r of Er.C
-                concept_c = concept.filler()  # C of Er.C
+        # E-rule 1.1:
+        # If there is an element e with initial concept C assigned, e is the r-successor of d.
+        if concept_c in self.initial_concepts:
+            element_e = self.initial_concepts[concept_c]
+            # TODO: is this check redundant?
+            if role_r not in self.roles_successors[individual]:
+                self.roles_successors[individual][role_r] = set()
 
-                # E-rule 1.1:
-                # If there is an element e with initial concept C assigned, e is the r-successor of d.
-                if concept_c in self.initial_concepts:
-                    element_e = self.initial_concepts[concept_c]
-                    # TODO: is this check redundant?
-                    if role_r not in self.roles_successors[individual]:
-                        self.roles_successors[individual][role_r] = set()
-                    self.roles_successors[individual][role_r].add(element_e)
-                    changed = True
+            # only add the element if not already assigned
+            if element_e not in self.roles_successors[individual][role_r]:
+                self.roles_successors[individual][role_r].add(element_e)
+                changed = True
 
-                # E-rule 1.2:
-                # Otherwise, add a new r-successor to d, and assign to it as initial concept C.
-                else:
-                    # TODO: resolve this temp fix for indiviual
-                    new_individual = "d_1"
-                    if role_r not in self.roles_successors[individual]:
-                        self.roles_successors[individual][role_r] = set()
-                    # "add a new r-successor to d"
-                    self.roles_successors[individual][role_r].add(new_individual)
-                    # "and assign to it as initial concept C."
-                    self.initial_concepts[concept_c] = new_individual
-                    changed = True
+        # E-rule 1.2:
+        # Otherwise, add a new r-successor to d, and assign to it as initial concept C.
+        else:
+            self.last_individual += 1
+            if role_r not in self.roles_successors[individual]:
+                self.roles_successors[individual][role_r] = set()
+            # "add a new r-successor to d"
+            self.roles_successors[individual][role_r].add(self.last_individual)
+            # "and assign to it as initial concept C."
+            self.initial_concepts[concept_c] = self.last_individual
+            changed = True
 
         return changed
 
     def exists_rule_2(self, individual):
         # E-rule 2: If d has an r-successor with C assigned, add Er.C to d
+        add_concepts = set()
         changed = False
 
-        # TODO: I'm not sure if this is correct.
-        for concept in self.interpretation[individual]:
-            for role in self.roles_successors[individual]:
-                if concept in self.roles_successors[individual][role]:
-                    self.interpretation[individual].add(self.elFactory.getExistentialRoleRestriction(role, concept))
-                    changed = True
+        for role, successors in self.roles_successors[individual].items():
+            for successor in successors:
+                for concept in self.interpretation[successor]:
+                    existential = self.el_factory.getExistentialRoleRestriction(role, concept)
+                    if existential in self.all_concepts and existential not in self.interpretation[individual]:
+                        add_concepts.add(existential)
+                        changed = True
+
+        self.interpretation[individual].update(add_concepts)
 
         return changed
 
-    def subsumption_rule(self, individual):
+    def subsumption_rule(self, individual, concept):
         # Subsumption rule: If d has C assigned and C subsumes D, assign D to d
+        add_concepts = set()
         changed = False
 
         # I tried putting more for-loops in here, i hope this is enough.
-        for concept in self.interpretation[individual]:
-            for subsumed_concept in self.all_concepts:
-                for axiom in self.axioms:
-                    axiom_type = axiom.getClass().getSimpleName()
-                    if (
-                        axiom_type == "GeneralConceptInclusion"
-                        and axiom.lhs() == concept
-                        and axiom.rhs() == subsumed_concept
-                    ):
-                        self.interpretation[individual].add(subsumed_concept)
-                        changed = True
+        for axiom in self.axioms:
+            axiom_type = axiom.getClass().getSimpleName()
+            if (
+                axiom_type == "GeneralConceptInclusion"
+                and axiom.lhs() == concept
+                and axiom.rhs() not in self.interpretation[individual]
+            ):
+                add_concepts.add(axiom.rhs())
+                changed = True
+
+        self.interpretation[individual].update(add_concepts)
 
         return changed
 
@@ -190,15 +195,57 @@ class ELReasoner:
         """
         A function that will apply all rules to individual
         """
-        pass
+        changes = []
 
-    def get_blocked_individuals(self, interpretation):
-        pass
+        # top_rule has to run only once - it's only dependent on original tbox
+        # added attribute to keep track of this
+        if not self.top_rule_run:
+            changes.append(self.top_rule(individual))
+            self.top_rule_run = True
+
+        # all the rules that depend on for concept in interpretation[individual]:
+        # Casting this to a list to fix a bug where the set was modified during iteration.
+        for concept in list(self.interpretation[individual]):
+            concept_type = concept.getClass().getSimpleName()
+
+            # Intersect rule 1
+            if concept_type == "ConceptConjunction":
+                changes.append(self.intersect_rule_1(individual, concept))
+
+            # Intersect rule 2
+            # Doubtful if this optim does much, but it's worth a try.
+            changes.append(self.intersect_rule_2(individual, concept))
+
+            # Exists rule 2
+            if concept_type == "ExistentialRoleRestriction":
+                changes.append(self.exists_rule_1(individual, concept))
+
+            # Subsumption rule
+            changes.append(self.subsumption_rule(individual, concept))
+
+        # Exists rule 2 (Unchanged - not dependent on concepts in individual)
+        changes.append(self.exists_rule_2(individual))
+
+        # print(changes)
+
+        return True in changes
+
+    def get_blocked_individuals(self):
+        """
+        Function will check which individuals are blocked, and return this set.
+        """
+        for ind1, concepts1 in self.interpretation.items():
+            for ind2, concepts2 in self.interpretation.items():
+                if ind2 < ind1 and concepts1.issubset(concepts2):
+                    self.blocked_individuals.add(ind1)
+
+        return self.blocked_individuals
 
     def run(self):
         self.subsumers = []
 
-        for concept in self.all_concepts:
+        for concept in list(self.concept_names):
+            print(f"New concept: {self.formatter.format(concept)}")
             # reset attributes for this concept
             subsumer = concept
             self.first_individual = 1
@@ -206,7 +253,10 @@ class ELReasoner:
             self.initial_concepts = {}
             self.blocked_individuals = set()
             self.interpretation = defaultdict(set)
-            self.role_successors = defaultdict(defaultdict(set))
+            self.roles_successors = defaultdict(lambda: defaultdict(set))
+
+            # 1. add initial indivdiual
+            self.interpretation[self.first_individual].add(self.subsumee)
 
             # 2. set changed == True
             changed = True
@@ -218,8 +268,8 @@ class ELReasoner:
                 # 3.2. for every element d in the current interpretation:
                 # 3.2.1. apply all the rules on d in all possible ways,
                 # so that only concepts from the input get assigned
-                for individual in self.interpretation:
-                    if individual in self.get_blocked_individuals(self.interpretation):
+                for individual in list(self.interpretation.keys()):
+                    if individual not in self.get_blocked_individuals():
                         # 3.2.2. If a new element was added or a new concept was assigned:
                         # set changed == True
                         changed = self.apply_rules(individual)
@@ -227,5 +277,6 @@ class ELReasoner:
             # If D_0 was assigned to d_0, return True, else return False
             if subsumer in self.interpretation[self.first_individual]:
                 self.subsumers.append(subsumer)
+            print(self.subsumers)
 
         return self.subsumers

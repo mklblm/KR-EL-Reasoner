@@ -77,7 +77,6 @@ class ELReasoner:
         """
         if self.top:
             self.interpretation[individual].add(self.top)
-            return False
 
     def intersect_rule_1(self, individual, concept):
         """
@@ -270,11 +269,14 @@ class ELReasoner:
             # 3.2. for every element d in the current interpretation:
             # 3.2.1. apply all the rules on d in all possible ways,
             # so that only concepts from the input get assigned
+            changes = set()
             for individual in list(self.interpretation.keys()):
                 if individual not in self.get_blocked_individuals():
                     # 3.2.2. If a new element was added or a new concept was assigned:
                     # set changed == True
-                    changed = self.apply_rules(individual)
+                    changes.add(self.apply_rules(individual))
+
+            changed = True in changes                    
 
         for concept in self.concept_names:
             # Uncomment to show current concept:
@@ -284,11 +286,16 @@ class ELReasoner:
             if concept in self.interpretation[self.first_individual]:
                 self.subsumers.append(concept)
 
+        # Temporary fix for top
+        # TODO
+        top = self.el_factory.getTop()
+        if top in self.interpretation[self.first_individual]:
+            self.subsumers.append(top)
+
         # print the subsumers
         for x in self.subsumers:
             # Indexing to remove parentheses from print statement.
-            print(self.formatter.format(x)[1:-1])
-            # Note how this thing also prints "None" as the last subsumer, i assume this is Top.
+            print(self.formatter.format(x).strip('"'))
 
         # TODO: Remove this debugging code
         # print(f"{self.subsumee} Subsumers: {[self.formatter.format(x) for x in self.subsumers]}")

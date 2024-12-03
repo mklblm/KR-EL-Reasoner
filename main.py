@@ -22,4 +22,4 @@ if __name__ == "__main__":
     reasoner = ELReasoner(args.ontology_file, args.class_name)
 
     # Run main with provide arguments
-    print(reasoner.run())
+    reasoner.run()

@@ -2,7 +2,6 @@ from collections import defaultdict
 from time import perf_counter
 
 from py4j.java_gateway import JavaGateway
-from tqdm import tqdm
 
 
 class ELReasoner:
@@ -40,6 +39,7 @@ class ELReasoner:
         # store if ontology has top concept
         self.ontology_contains_top = self.contains_top(self.ontology)
         self.top_rule_run = False
+        self.top = self.contains_top(self.ontology)
         self.subsumee = self.el_factory.getConceptName(class_name)
         self.GCIs = self.get_GCIs()
 
@@ -50,6 +50,13 @@ class ELReasoner:
         self.interpretation = defaultdict(set)
         self.roles_successors = defaultdict(lambda: defaultdict(set))
 
+        # Storing the total execution time of rules
+        self.time_intersect_1 = 0
+        self.time_intersect_2 = 0
+        self.time_exists_1 = 0
+        self.time_exists_2 = 0
+        self.time_subsumption = 0
+
     def contains_top(self, ontology):
         all_concepts = ontology.getSubConcepts()
 
@@ -57,7 +64,7 @@ class ELReasoner:
             concept_type = concept.getClass().getSimpleName()
 
             if concept_type == "TopConcept$":
-                return True
+                return concept
 
         return False
 
@@ -68,6 +75,10 @@ class ELReasoner:
             axiom_type = axiom.getClass().getSimpleName()
             if axiom_type == "GeneralConceptInclusion":
                 GCIs[axiom.lhs()].add(axiom.rhs())
+            elif axiom_type == "EquivalenceAxiom":
+                axiom_concepts = axiom.getConcepts().toArray()
+                GCIs[axiom_concepts[0]].add(axiom_concepts[1])
+                GCIs[axiom_concepts[1]].add(axiom_concepts[0])
 
         return GCIs
 
@@ -75,13 +86,9 @@ class ELReasoner:
         """
         Add top to this individual, only if top occurs in tbox.
         """
-
-        for concept in self.all_concepts:
-            concept_type = concept.getClass().getSimpleName()
-
-            if concept_type == "TopConcept$":
-                self.interpretation[individual].add(concept)
-                break
+        if self.top:
+            self.interpretation[individual].add(self.top)
+            return False
 
     def intersect_rule_1(self, individual, concept):
         """
@@ -163,6 +170,7 @@ class ELReasoner:
             self.roles_successors[individual][role_r].add(self.last_individual)
             # "and assign to it as initial concept C."
             self.initial_concepts[concept_c] = self.last_individual
+            self.interpretation[self.last_individual].add(concept_c)
             changed = True
 
         return changed
@@ -209,7 +217,6 @@ class ELReasoner:
         changes = []
 
         # top_rule has to run only once - it's only dependent on original tbox
-        # added attribute to keep track of this
         if not self.top_rule_run:
             changes.append(self.top_rule(individual))
             self.top_rule_run = True
@@ -255,43 +262,45 @@ class ELReasoner:
         self.subsumers = []
         # Track execution time
         start_time = perf_counter()
-        # There's a few ways to implement tqdm progress bar, this keeps it at the bottom.
-        for concept in tqdm(list(self.concept_names), desc="Processing concepts", leave=True):
-            # print(f"Current execution time: {perf_counter() - start_time:.4f}")
-            # tqdm.write(f"Found concept: {self.formatter.format(concept)}")
-            # reset attributes for this concept
-            subsumer = concept
-            self.first_individual = 1
-            self.last_individual = 1
-            self.initial_concepts = {}
-            self.blocked_individuals = set()
-            self.interpretation = defaultdict(set)
-            self.roles_successors = defaultdict(lambda: defaultdict(set))
 
-            # 1. add initial indivdiual
-            self.interpretation[self.first_individual].add(self.subsumee)
+        # reset attributes for this concept
+        self.first_individual = 1
+        self.last_individual = 1
+        self.initial_concepts = {}
+        self.blocked_individuals = set()
+        self.interpretation = defaultdict(set)
+        self.roles_successors = defaultdict(lambda: defaultdict(set))
+        self.top_rule_run = False
 
-            # 2. set changed == True
-            changed = True
-            # 3. while changed == True
-            while changed:
-                # 3.1. set changed == False
-                changed = False
+        # 1. add initial indivdiual
+        self.interpretation[self.first_individual].add(self.subsumee)
 
-                # 3.2. for every element d in the current interpretation:
-                # 3.2.1. apply all the rules on d in all possible ways,
-                # so that only concepts from the input get assigned
-                for individual in list(self.interpretation.keys()):
-                    if individual not in self.get_blocked_individuals():
-                        # 3.2.2. If a new element was added or a new concept was assigned:
-                        # set changed == True
-                        changed = self.apply_rules(individual)
+        # 2. set changed == True
+        changed = True
+        # 3. while changed == True
+        while changed:
+            # 3.1. set changed == False
+            changed = False
+
+            # 3.2. for every element d in the current interpretation:
+            # 3.2.1. apply all the rules on d in all possible ways,
+            # so that only concepts from the input get assigned
+            for individual in list(self.interpretation.keys()):
+                if individual not in self.get_blocked_individuals():
+                    # 3.2.2. If a new element was added or a new concept was assigned:
+                    # set changed == True
+                    changed = self.apply_rules(individual)
+
+        for concept in self.concept_names:
+            # Uncomment to show current concept:
+            # print(f"Found concept: {self.formatter.format(concept)}")
 
             # If D_0 was assigned to d_0, return True, else return False
-            if subsumer in self.interpretation[self.first_individual]:
-                self.subsumers.append(subsumer)
+            if concept in self.interpretation[self.first_individual]:
+                self.subsumers.append(concept)
 
         # print the subsumers
         print(f"{self.subsumee} Subsumers: {[self.formatter.format(x) for x in self.subsumers]}")
+        # print execution time
         print(f"Total execution time: {perf_counter() - start_time:.4f} seconds")
         return self.subsumers

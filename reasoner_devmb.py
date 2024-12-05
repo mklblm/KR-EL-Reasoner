@@ -203,18 +203,30 @@ class ELReasoner:
         return changed
 
     def exists_rule_2(self, individual):
-        # E-rule 2: If d has an r-successor with C assigned, add Er.C to d
+        """For each role succesor of the individual, assign the existential role restriction
+        to this individual as well. Only if the existential concept occurs in the tbox.
+
+        Args:
+            individual (int): Integer representing the individual
+
+        Returns:
+            Bool: True if an existential role restriction was assigned
+        """
         add_concepts = set()
         changed = False
-
+        
+        # loop over each succesor and their assigned concepts of the individual
         for role, successors in self.roles_successors[individual].items():
             for successor in successors:
                 for concept in self.interpretation[successor]:
                     existential = self.el_factory.getExistentialRoleRestriction(role, concept)
+
+                    # add the role restriction if not yet assigned, and it occurs in the tbox
                     if existential in self.all_concepts and existential not in self.interpretation[individual]:
                         add_concepts.add(existential)
                         changed = True
 
+        # assign all role restrictions at once
         self.interpretation[individual].update(add_concepts)
 
         return changed
@@ -283,9 +295,14 @@ class ELReasoner:
         return True in changes
 
     def get_blocked_individuals(self):
+        """For each individual, check if they are blocked.
+
+        Returns:
+            set: Set of blocked individuals
         """
-        Function will check which individuals are blocked, and return this set.
-        """
+
+        # for any individual, if a previous individual has at least the same concepts
+        # assigned, it is blocked
         for ind1, concepts1 in self.interpretation.items():
             for ind2, concepts2 in self.interpretation.items():
                 if ind2 < ind1 and concepts1.issubset(concepts2):
@@ -295,53 +312,44 @@ class ELReasoner:
 
     def run(self):
         self.subsumers = []
-
-        # Track execution time
-        start_time = perf_counter()
-
-        # 1. add initial indivdiual
+        
+        # start interpretation with one individual with subsumee assigned
         self.interpretation[self.first_individual].add(self.subsumee)
 
-        # 2. set changed == True
+        # to keep track of changes in interpretation
         changed = True
-        # 3. while changed == True
+
+        # loop as long as interpretation changed
         while changed:
-            # 3.1. set changed == False
+            
+            # reset changed to check if applying rules will change interpretation
             changed = False
 
-            # 3.2. for every element d in the current interpretation:
-            # 3.2.1. apply all the rules on d in all possible ways,
-            # so that only concepts from the input get assigned
+            # keep track of changes for all rules
             changes = set()
+
+
+            # apply all rules to every (non-blocked) individual in current interpretation
             for individual in list(self.interpretation.keys()):
                 if individual not in self.get_blocked_individuals():
-                    # 3.2.2. If a new element was added or a new concept was assigned:
-                    # set changed == True
+
                     changes.add(self.apply_rules(individual))
 
+            # if any rule made a change to interpretation
             changed = True in changes                    
-
+        
+        # loop over all concept names in ontology to check if they are subsumers of subsumee
         for concept in self.concept_names:
-            # Uncomment to show current concept:
-            # print(f"Found concept: {self.formatter.format(concept)}")
-
-            # If D_0 was assigned to d_0, return True, else return False
+            
+            # if the concept was assigned to first individual, it is a subsumer
             if concept in self.interpretation[self.first_individual]:
                 self.subsumers.append(concept)
 
-        # Temporary fix for top
-        # TODO
+        # also check if top is a subsumer (if not, the ontology is not coherent)
         top = self.el_factory.getTop()
         if top in self.interpretation[self.first_individual]:
             self.subsumers.append(top)
 
         # print the subsumers
         for x in self.subsumers:
-            # Indexing to remove parentheses from print statement.
             print(self.formatter.format(x).strip('"'))
-
-        # TODO: Remove this debugging code
-        # print(f"{self.subsumee} Subsumers: {[self.formatter.format(x) for x in self.subsumers]}")
-        # print execution time
-        # print(f"Total execution time: {perf_counter() - start_time:.4f} seconds")
-        # return self.subsumers

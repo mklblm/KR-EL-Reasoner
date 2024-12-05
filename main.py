@@ -1,7 +1,7 @@
 import argparse
 
 # from reasoner_class import ELReasoner
-from reasoner_devmb import ELReasoner
+from reasoner import ELReasoner
 
 if __name__ == "__main__":
     # Set-up parsing command line arguments

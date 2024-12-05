@@ -1,4 +1,5 @@
 from collections import defaultdict
+from itertools import combinations
 from time import perf_counter
 
 from py4j.java_gateway import JavaGateway
@@ -34,12 +35,8 @@ class ELReasoner:
         # to create EL concepts
         self.el_factory = self.gateway.getELFactory()
 
-        # Attributes to keep track of during runs
-        self.top = self.contains_top(self.ontology)
+        # initialize attributes for algorithm rum
         self.subsumee = self.el_factory.getConceptName(class_name)
-        self.GCIs = self.get_GCIs()
-
-        # keep track of last individual added (individuals are integers)
         self.first_individual = 1
         self.last_individual = 1
         self.initial_concepts = {}
@@ -47,9 +44,18 @@ class ELReasoner:
         self.interpretation = defaultdict(set)
         self.roles_successors = defaultdict(lambda: defaultdict(set))
 
+        self.top = self.contains_top(self.ontology)
+        self.GCIs = self.get_GCIs()
+
     def contains_top(self, ontology):
+        """Function checks whether Top concept occurs in ontology.
+
+        Returns:
+            bool: True if Top occurs in docstring
+        """
         all_concepts = ontology.getSubConcepts()
 
+        # loop over all concepts and check if concept is Top.
         for concept in all_concepts:
             concept_type = concept.getClass().getSimpleName()
 
@@ -59,12 +65,25 @@ class ELReasoner:
         return False
 
     def get_GCIs(self):
+        """Function creates a dictionary for all GCIs and Equivalence axioms
+        in the ontology. The dictionary keys are the concepts on the left hand 
+        side of the GCIs, the values are a set of all concepts that occur on
+        the right hand side for the given key concept.
+
+        Returns:
+            Dict: Dictionary with left hand side concepts as keys, and a set of 
+            right hand side concepts as value.
+        """
         GCIs = defaultdict(set)
 
         for axiom in self.axioms:
             axiom_type = axiom.getClass().getSimpleName()
+
+            # if GCI, just add right hand side to the set
             if axiom_type == "GeneralConceptInclusion":
                 GCIs[axiom.lhs()].add(axiom.rhs())
+
+            # if equivalence axiom, add both directions to dictionary
             elif axiom_type == "EquivalenceAxiom":
                 axiom_concepts = axiom.getConcepts().toArray()
                 GCIs[axiom_concepts[0]].add(axiom_concepts[1])
@@ -74,42 +93,61 @@ class ELReasoner:
 
     def top_rule(self, individual):
         """
-        Add top to this individual, only if top occurs in tbox.
+        Assign top to this individual.
         """
-        if self.top:
+        if self.top and self.el_factory.getTop() not in self.interpretation[individual]:
             self.interpretation[individual].add(self.top)
+            return True
+        
+        return False
 
-    def intersect_rule_1(self, individual, concept):
-        """
-        Add the conjuncts of all conjunctions assigned to this individual to
-        the individual as well.
+    def intersect_rule_1(self, individual, conjunction):
+        """Assign the individual concepts of the conjunction
+        to the individual in the representation
+
+        Args:
+            individual (int): integer representing individual
+            concept : A conjunction concept
+
+        Returns:
+            bool: True if something actually changed.
         """
         add_concepts = set()
         changed = False
 
-        # find conjunctions in individual
-        for conjunct in concept.getConjuncts():
+        for conjunct in conjunction.getConjuncts():
+
             # assign the conjuncts of this conjunction to individual (if not already present)
             if conjunct not in self.interpretation[individual]:
                 add_concepts.add(conjunct)
                 changed = True
 
+        # add all conjuncts at once
         self.interpretation[individual].update(add_concepts)
 
         return changed
 
-    def intersect_rule_2(self, individual, concept):
-        """
-        For all combinations of concepts in individual, also add the conjunction to the
-        individual. Only do this if the conjunction appears in the Tbox.
+    def intersect_rule_2(self, individual):
+        """For any combination of two concepts assigned to an individual,
+        also assign the conjunction, but only if the conjunction occurs in the
+        tbox.
+
+        Args:
+            individual (int): Integer representing the individual
+
+        Returns:
+            Bool: True if a conjunction was actually added.
         """
         add_concepts = set()
         changed = False
 
         # get all combinations of 2 for the concepts of this individual
         individual_concepts = list(self.interpretation[individual])
+        all_combinations = combinations(individual_concepts, 2)
+
+        #TODO: remove these lines if we def don't need it.
         # Don't need to check for combinations of individual with itself
-        all_combinations = [(concept, ind) for ind in individual_concepts if ind != concept]
+        # all_combinations = [(concept, ind) for ind in individual_concepts if ind != concept]
 
         # create a conjunction for all combinations
         for combination in all_combinations:
@@ -120,6 +158,7 @@ class ELReasoner:
                 add_concepts.add(conjunction)
                 changed = True
 
+        # add all conjunctions at once
         self.interpretation[individual].update(add_concepts)
 
         return changed
@@ -181,32 +220,46 @@ class ELReasoner:
         return changed
 
     def subsumption_rule(self, individual, concept):
-        # Subsumption rule: If d has C assigned and C subsumes D, assign D to d
-        previous_len = len(self.interpretation[individual])
-        add_concepts = set()
+        """Assign all subsumers of 'concept' to this individual as well.
+
+        Args:
+            individual (int): Integer representing an individual
+            concept : Concept from which the subsumers should be assigned.
+
+        Returns:
+            Bool: True if subsumers were assigned to individual.
+        """
         changed = False
+        previous_len = len(self.interpretation[individual])
 
-        for concept in self.interpretation[individual]:
-            add_concepts.update(self.GCIs[concept])
-
-        self.interpretation[individual].update(add_concepts)
+        # assign all subsumers
+        self.interpretation[individual].update(self.GCIs[concept])
 
         current_len = len(self.interpretation[individual])
 
+        # if individual now has more concepts assigned, the interpretation was changed
         if current_len > previous_len:
             changed = True
 
         return changed
 
     def apply_rules(self, individual):
-        """
-        A function that will apply all rules to individual
+        """Apply all the rules to this individual.
+
+        Args:
+            individual (int): Integer representing the individual
+
+        Returns:
+            Bool: True if any rule resulted in a change
         """
         changes = []
 
         # top rule only applies if top in tbox:
         if self.top:
             changes.append(self.top_rule(individual))
+
+        # Intersect rule 2
+        changes.append(self.intersect_rule_2(individual))
 
         # all the rules that depend on for concept in interpretation[individual]:
         # Casting this to a list to fix a bug where the set was modified during iteration.
@@ -216,9 +269,6 @@ class ELReasoner:
             # Intersect rule 1
             if concept_type == "ConceptConjunction":
                 changes.append(self.intersect_rule_1(individual, concept))
-
-            # Intersect rule 2
-            changes.append(self.intersect_rule_2(individual, concept))
 
             # Exists rule 2
             if concept_type == "ExistentialRoleRestriction":

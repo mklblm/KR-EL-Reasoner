@@ -309,6 +309,29 @@ class ELReasoner:
                     self.blocked_individuals.add(ind1)
 
         return self.blocked_individuals
+    
+    def get_subsumers(self, interpretation):
+        """Find and print all subsumers using the first individual from the interpretation.
+
+        Args:
+            interpretation (dict): Dictionary of indivdiuals and their assigned concepts
+        """
+        
+        # loop over all concept names in ontology to check if they are subsumers of subsumee
+        for concept in self.concept_names:
+            
+            # if the concept was assigned to first individual, it is a subsumer
+            if concept in interpretation[self.first_individual]:
+                self.subsumers.append(concept)
+
+        # also check if top is a subsumer (if not, the ontology is not coherent)
+        top = self.el_factory.getTop()
+        if top in interpretation[self.first_individual]:
+            self.subsumers.append(top)
+
+        # print the subsumers
+        for x in self.subsumers:
+            print(self.formatter.format(x).strip('"'))
 
     def run(self):
         self.subsumers = []
@@ -324,32 +347,14 @@ class ELReasoner:
             
             # reset changed to check if applying rules will change interpretation
             changed = False
-
-            # keep track of changes for all rules
             changes = set()
-
 
             # apply all rules to every (non-blocked) individual in current interpretation
             for individual in list(self.interpretation.keys()):
                 if individual not in self.get_blocked_individuals():
-
                     changes.add(self.apply_rules(individual))
 
             # if any rule made a change to interpretation
             changed = True in changes                    
-        
-        # loop over all concept names in ontology to check if they are subsumers of subsumee
-        for concept in self.concept_names:
-            
-            # if the concept was assigned to first individual, it is a subsumer
-            if concept in self.interpretation[self.first_individual]:
-                self.subsumers.append(concept)
 
-        # also check if top is a subsumer (if not, the ontology is not coherent)
-        top = self.el_factory.getTop()
-        if top in self.interpretation[self.first_individual]:
-            self.subsumers.append(top)
-
-        # print the subsumers
-        for x in self.subsumers:
-            print(self.formatter.format(x).strip('"'))
+        self.get_subsumers(self.interpretation)

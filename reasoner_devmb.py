@@ -334,6 +334,9 @@ class ELReasoner:
             print(self.formatter.format(x).strip('"'))
 
     def run(self):
+        """Run the EL algorithm for self.ontology and self.subsumee, print the subsumers found for the
+        subsumee.
+        """
         self.subsumers = []
         
         # start interpretation with one individual with subsumee assigned

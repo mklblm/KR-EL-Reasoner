@@ -1,6 +1,5 @@
 from collections import defaultdict
 from itertools import combinations
-from time import perf_counter
 
 from py4j.java_gateway import JavaGateway
 
@@ -66,12 +65,12 @@ class ELReasoner:
 
     def get_GCIs(self):
         """Function creates a dictionary for all GCIs and Equivalence axioms
-        in the ontology. The dictionary keys are the concepts on the left hand 
+        in the ontology. The dictionary keys are the concepts on the left hand
         side of the GCIs, the values are a set of all concepts that occur on
         the right hand side for the given key concept.
 
         Returns:
-            Dict: Dictionary with left hand side concepts as keys, and a set of 
+            Dict: Dictionary with left hand side concepts as keys, and a set of
             right hand side concepts as value.
         """
         GCIs = defaultdict(set)
@@ -98,7 +97,7 @@ class ELReasoner:
         if self.top and self.el_factory.getTop() not in self.interpretation[individual]:
             self.interpretation[individual].add(self.top)
             return True
-        
+
         return False
 
     def intersect_rule_1(self, individual, conjunction):
@@ -116,7 +115,6 @@ class ELReasoner:
         changed = False
 
         for conjunct in conjunction.getConjuncts():
-
             # assign the conjuncts of this conjunction to individual (if not already present)
             if conjunct not in self.interpretation[individual]:
                 add_concepts.add(conjunct)
@@ -145,7 +143,7 @@ class ELReasoner:
         individual_concepts = list(self.interpretation[individual])
         all_combinations = combinations(individual_concepts, 2)
 
-        #TODO: remove these lines if we def don't need it.
+        # TODO: remove these lines if we def don't need it.
         # Don't need to check for combinations of individual with itself
         # all_combinations = [(concept, ind) for ind in individual_concepts if ind != concept]
 
@@ -214,7 +212,7 @@ class ELReasoner:
         """
         add_concepts = set()
         changed = False
-        
+
         # loop over each succesor and their assigned concepts of the individual
         for role, successors in self.roles_successors[individual].items():
             for successor in successors:
@@ -309,17 +307,16 @@ class ELReasoner:
                     self.blocked_individuals.add(ind1)
 
         return self.blocked_individuals
-    
+
     def get_subsumers(self, interpretation):
         """Find and print all subsumers using the first individual from the interpretation.
 
         Args:
             interpretation (dict): Dictionary of indivdiuals and their assigned concepts
         """
-        
+
         # loop over all concept names in ontology to check if they are subsumers of subsumee
         for concept in self.concept_names:
-            
             # if the concept was assigned to first individual, it is a subsumer
             if concept in interpretation[self.first_individual]:
                 self.subsumers.append(concept)
@@ -338,7 +335,7 @@ class ELReasoner:
         subsumee.
         """
         self.subsumers = []
-        
+
         # start interpretation with one individual with subsumee assigned
         self.interpretation[self.first_individual].add(self.subsumee)
 
@@ -347,7 +344,6 @@ class ELReasoner:
 
         # loop as long as interpretation changed
         while changed:
-            
             # reset changed to check if applying rules will change interpretation
             changed = False
             changes = set()
@@ -358,6 +354,6 @@ class ELReasoner:
                     changes.add(self.apply_rules(individual))
 
             # if any rule made a change to interpretation
-            changed = True in changes                    
+            changed = True in changes
 
         self.get_subsumers(self.interpretation)

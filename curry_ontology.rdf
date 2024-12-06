@@ -651,36 +651,6 @@
     
 
 
-    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#GlutenFreeCurry -->
-
-    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#GlutenFreeCurry">
-        <owl:equivalentClass>
-            <owl:Class>
-                <owl:intersectionOf rdf:parseType="Collection">
-                    <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Curry"/>
-                    <owl:Class>
-                        <owl:complementOf>
-                            <owl:Restriction>
-                                <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#hasIngredient"/>
-                                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#GlutenRichIngredient"/>
-                            </owl:Restriction>
-                        </owl:complementOf>
-                    </owl:Class>
-                </owl:intersectionOf>
-            </owl:Class>
-        </owl:equivalentClass>
-    </owl:Class>
-    
-
-
-    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#GlutenRichIngredient -->
-
-    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#GlutenRichIngredient">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#CurryIngredient"/>
-    </owl:Class>
-    
-
-
     <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Goat -->
 
     <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Goat">
@@ -1001,14 +971,6 @@
     
 
 
-    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#SoySauce -->
-
-    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#SoySauce">
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#GlutenRichIngredient"/>
-    </owl:Class>
-    
-
-
     <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Spiciness -->
 
     <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Spiciness">
@@ -1254,20 +1216,6 @@
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
 
-    <rdf:Description>
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
-        <owl:members rdf:parseType="Collection">
-            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#AnimalIngredient"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#CheeseIngredient"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#FruitIngredient"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#GlutenRichIngredient"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#GroundSpiceBlend"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#GroundSpices"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Salt"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Sugar"/>
-            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#VegetableIngredient"/>
-        </owl:members>
-    </rdf:Description>
     <rdf:Description>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
         <owl:members rdf:parseType="Collection">

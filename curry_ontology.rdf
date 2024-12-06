@@ -213,6 +213,12 @@
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#NamedCurry"/>
         <rdfs:subClassOf>
             <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#hasCurryBase"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Cream"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
                 <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#hasCurryIngredient"/>
                 <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Chicken"/>
             </owl:Restriction>
@@ -369,6 +375,20 @@
                 </owl:intersectionOf>
             </owl:Class>
         </owl:equivalentClass>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#ChilliPepper -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#ChilliPepper">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#GroundSpices"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#hasSpiciness"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Hot"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
     </owl:Class>
     
 
@@ -716,6 +736,12 @@
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#NamedCurry"/>
         <rdfs:subClassOf>
             <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#hasCurryBase"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Broth"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
                 <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#hasCurryIngredient"/>
                 <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Chicken"/>
             </owl:Restriction>
@@ -723,7 +749,48 @@
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#hasCurryIngredient"/>
-                <owl:allValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Chicken"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#GaramMasala"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#hasCurryIngredient"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Garlic"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#hasCurryIngredient"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Ginger"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#hasCurryIngredient"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Onion"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#hasCurryIngredient"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Turmeric"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#hasCurryIngredient"/>
+                <owl:allValuesFrom>
+                    <owl:Class>
+                        <owl:unionOf rdf:parseType="Collection">
+                            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Chicken"/>
+                            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#GaramMasala"/>
+                            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Garlic"/>
+                            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Ginger"/>
+                            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Onion"/>
+                            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Turmeric"/>
+                        </owl:unionOf>
+                    </owl:Class>
+                </owl:allValuesFrom>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
@@ -743,8 +810,20 @@
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#NamedCurry"/>
         <rdfs:subClassOf>
             <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#hasCurryBase"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Cream"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
                 <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#hasCurryIngredient"/>
                 <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Chicken"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#hasCurryIngredient"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Onion"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
@@ -760,6 +839,7 @@
                     <owl:Class>
                         <owl:unionOf rdf:parseType="Collection">
                             <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Chicken"/>
+                            <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Onion"/>
                             <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Potato"/>
                         </owl:unionOf>
                     </owl:Class>
@@ -790,30 +870,6 @@
 
     <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Mild">
         <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Spiciness"/>
-    </owl:Class>
-    
-
-
-    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#MildCurry -->
-
-    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#MildCurry">
-        <owl:equivalentClass>
-            <owl:Class>
-                <owl:intersectionOf rdf:parseType="Collection">
-                    <rdf:Description rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Curry"/>
-                    <owl:Class>
-                        <owl:complementOf>
-                            <owl:Restriction>
-                                <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#hasCurryIngredient"/>
-                                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#SpicyIngredient"/>
-                            </owl:Restriction>
-                        </owl:complementOf>
-                    </owl:Class>
-                </owl:intersectionOf>
-            </owl:Class>
-        </owl:equivalentClass>
-        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Curry"/>
-        <owl:disjointWith rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#SpicyCurry"/>
     </owl:Class>
     
 
@@ -1080,6 +1136,69 @@
                 </owl:intersectionOf>
             </owl:Class>
         </owl:equivalentClass>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Vindaloo -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Vindaloo">
+        <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#NamedCurry"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#hasCurryBase"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Broth"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#hasCurryIngredient"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#BlackPepper"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#hasCurryIngredient"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#ChilliPepper"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#hasCurryIngredient"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Cumin"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#hasCurryIngredient"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Garlic"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#hasCurryIngredient"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Ginger"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#hasCurryIngredient"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Onion"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#hasCurryIngredient"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Salt"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#hasCurryIngredient"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/mikel/ontologies/2024/10/CurryOntology#Turmeric"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:comment>This is the Vindaloo base, any protein can be added, therefore no &apos;hasCurryIngredient only&apos; restriction.</rdfs:comment>
     </owl:Class>
     
 

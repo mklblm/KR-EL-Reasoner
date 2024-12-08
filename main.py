@@ -14,10 +14,6 @@ if __name__ == "__main__":
     # Read arguments from command line
     args = parser.parse_args()
 
-    # Ensure class_name is in the correct form
-    if not (args.class_name.startswith('"') and args.class_name.endswith('"')):
-        args.class_name = f'"{args.class_name}"'
-
     # Create reasoner object
     reasoner = ELReasoner(args.ontology_file, args.class_name)
 

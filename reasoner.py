@@ -1,8 +1,8 @@
 from collections import defaultdict
 from itertools import combinations
+import argparse
 
 from py4j.java_gateway import JavaGateway
-
 
 class ELReasoner:
     def __init__(self, ontology_file, class_name) -> None:
@@ -292,22 +292,6 @@ class ELReasoner:
 
         return True in changes
 
-    def get_blocked_individuals(self):
-        """For each individual, check if they are blocked.
-
-        Returns:
-            set: Set of blocked individuals
-        """
-
-        # for any individual, if a previous individual has at least the same concepts
-        # assigned, it is blocked
-        for ind1, concepts1 in self.interpretation.items():
-            for ind2, concepts2 in self.interpretation.items():
-                if ind2 < ind1 and concepts1.issubset(concepts2):
-                    self.blocked_individuals.add(ind1)
-
-        return self.blocked_individuals
-
     def get_subsumers(self, interpretation):
         """Find and print all subsumers using the first individual from the interpretation.
 
@@ -350,10 +334,27 @@ class ELReasoner:
 
             # apply all rules to every (non-blocked) individual in current interpretation
             for individual in list(self.interpretation.keys()):
-                if individual not in self.get_blocked_individuals():
-                    changes.add(self.apply_rules(individual))
+                changes.add(self.apply_rules(individual))
 
             # if any rule made a change to interpretation
             changed = True in changes
 
         self.get_subsumers(self.interpretation)
+
+if __name__ == "__main__":
+    # Set-up parsing command line arguments
+    parser = argparse.ArgumentParser(description="Run EL reasoner and show subsumers for a given class name.")
+
+    # Adding arguments
+    parser.add_argument("ontology_file", help="Path to the ontology file in OWL format.")
+    parser.add_argument("class_name", help="Class name to compute subsumers for. Write as: ClassName")
+
+    # Read arguments from command line
+    args = parser.parse_args()
+
+    # Create reasoner object
+    reasoner = ELReasoner(args.ontology_file, args.class_name)
+
+    # Run main with provide arguments
+    reasoner.run()
+

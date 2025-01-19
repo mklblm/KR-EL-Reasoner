@@ -1,2 +1,4 @@
 dl4python-0.1.2-jar-with-dependencies.jar
 __pycache__/reasoner_devmb.cpython-312.pyc
+.DS_Store
+log.txt

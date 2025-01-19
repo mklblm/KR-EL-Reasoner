@@ -1,6 +1,6 @@
 # VU Knowledge Representation - EL Reasoner
 
-One Paragraph of the project description
+ADD PARAGRAPH OF PROJECT DESCRIPTION
 
 ## Getting Started
 

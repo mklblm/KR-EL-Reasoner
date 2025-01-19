@@ -1,75 +1,81 @@
-# Evolutionary Computing: Beating Evoman
+# VU Knowledge Representation - EL Reasoner
 
 One Paragraph of the project description
-
-Initially appeared on
-[gist](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2). But the page cannot open anymore so that is why I have moved it here.
 
 ## Getting Started
 
 These instructions will give you a copy of the project up and running on
-your local machine for development and testing purposes. See deployment
-for notes on deploying the project on a live system.
+your local machine.
 
 ### Prerequisites
 
 Requirements for the software and other tools to build, test and push 
-- [Example 1](https://www.example.com)
-- [Example 2](https://www.example.com)
+- [Python 3.10](https://www.python.org/downloads/) or higher
+- [Java 23](https://www.oracle.com/java/technologies/downloads/)
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development
-environment running
+This codebase was programmed using python 3.10.1. The requirements.txt file contains all the need packages to run the code succesfully. 
 
-Say what the step will be
+Download this code base by running the following line in your terminal:
 
-    Give the example
+```git clone https://github.com/mklblm/KR-EL-Reasoner```
 
-And repeat
+Install all required packages by running the following line in your terminal:
 
-    until finished
+```pip install -r requirements.txt```
 
-End with an example of getting some data out of the system or using it
-for a little demo
+#### Java Gateway
 
-## Running the tests
+This project was creating using the [dl4python library](https://github.com/PKoopmann/dl-lib). The libary is created specifically for the Knowledge Representation course at the Vrije Universiteit Amsterdam, in order for students to work with OWL ontologies in python instead of Java. In order to use dl4python, a number of preparation steps are necessary:
 
-Explain how to run the automated tests for this system
+1. Make sure recent versions of Python and Java are installed.
+2. Make sure Py4J is installed. This library is included in the requirements.txt file, and should thus be installed if all previous installation steps were followed. Alternatively, type the following command in the terminal:
 
-### Sample Tests
+    ```pip install py4j```
 
-Explain what these tests test and why
+3. In order to use the dl4python library and run the EL Reasoner, a gateway server between Python and Java needs to be running. Do so by typing the following command in the terminal:
 
-    Give an example
+    ```java -jar dl4python-0.1.2-jar-with-dependencies.jar```
 
-### Style test
+4. This gateway should be opened in the same folder as the python files using the dl4python library you want to run. Keep the gateway running while you want to run the python files. 
 
-Checks if the best practices and the right coding style has been used.
+5. Open a new terminal to run the python files.
 
-    Give an example
+## Running the Reasoner
 
-## Deployment
+The EL reasoner can be run by calling the following command in the terminal:
 
-Add additional notes to deploy this on a live system
+```python main.py ontology_file_path class_name```
 
-## Built With
+1. ontology_file_path should contain the path to an OWL ontology file.
+2. class_name should contain the name of a class in the ontology file for which you want to find the subsumers.
 
-  - [Contributor Covenant](https://www.contributor-covenant.org/) - Used
-    for the Code of Conduct
-  - [Creative Commons](https://creativecommons.org/) - Used to choose
-    the license
+### Example
 
-## Contributing
+Below is an example command that can be used to find the subsumers of the "Margherita" class in the pizza.owl file.
 
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code
-of conduct, and the process for submitting pull requests to us.
+```python main.py ontologies/pizza.owl '"Margherita"'```
 
-## Versioning
+The output of this command will look like this:
 
-We use [Semantic Versioning](http://semver.org/) for versioning. For the versions
-available, see the [tags on this
-repository](https://github.com/PurpleBooth/a-good-readme-template/tags).
+CheesyPizza
+
+Margherita
+
+PizzaComUmNome
+
+DomainThing
+
+Pizza
+
+Food
+
+⊤
+
+The printed classes are the found subsumers for the Margherita class. This list can be compared to the pizza ontology file itself.
+
+Other examples can be run by replacting "Margherita" with any other named class, e.g. "Cajun" or "Caprina".
 
 ## Authors
   - Alexandra Genis
@@ -77,19 +83,15 @@ repository](https://github.com/PurpleBooth/a-good-readme-template/tags).
   - Mikel Blom
 
 See also the list of
-[contributors](https://github.com/PurpleBooth/a-good-readme-template/contributors)
+[contributors](https://github.com/mklblm/KR-EL-Reasoner/graphs/contributors)
 who participated in this project.
 
 ## License
 
-This project is licensed under the [CC0 1.0 Universal](LICENSE.md)
-Creative Commons License - see the [LICENSE.md](LICENSE.md) file for
+This project is licensed under the [MIT](LICENSE.txt) License - see the [LICENSE.txt](LICENSE.txt) file for
 details
 
 ## Acknowledgments
 
-  - Hat tip to anyone whose code is used
-  - Inspiration
-  - etc
-  - **Billie Thompson** - *Provided README Template* -
-    [PurpleBooth](https://github.com/PurpleBooth)
+  - [Patrick Koopman](https://github.com/PKoopmann), the lecturer of Knowledge Representation, who has provided us with the dl4python files and documentation.
+

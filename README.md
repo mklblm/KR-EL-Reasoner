@@ -90,9 +90,9 @@ The printed classes are the found subsumers for the Margherita class. This list 
 Other examples can be run by replacting "Margherita" with any other named class, e.g. "Cajun" or "Caprina".
 
 ## Authors
-  - Alexandra Genis
-  - Daimy van Loo
-  - Mikel Blom
+* Alexandra Genis [github](https://github.com/al-101010)
+* Daimy van Loo [github](https://github.com/daimyvanloo)
+* Mikel Blom [github](https://github.com/mklblm/)
 
 See also the list of
 [contributors](https://github.com/mklblm/KR-EL-Reasoner/graphs/contributors)

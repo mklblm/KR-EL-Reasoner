@@ -67,7 +67,7 @@ The EL reasoner can be run by calling the following command in the terminal:
 
 Below is an example command that can be used to find the subsumers of the "MassamanCurry" class in the curry_ontology.rdf file.
 
-```python main.py ontologies/pizza.owl '"MassamanCurry"'```
+```python main.py ontologies/curry_ontology.rdf '"MassamanCurry"'```
 
 The output of this command will look like this:
 

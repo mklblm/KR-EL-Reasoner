@@ -1,5 +1,5 @@
 # VU Knowledge Representation - EL Reasoner
-This repo contains a group project from the course [Knowledge Representation](https://research.vu.nl/en/courses/knowledge-representation-4) (2024-25). The task was to create an intelligent reasoning system based on Description Logic (DL) consisting of an ontology and a reasoner based on Efficient Reasoning (EL). The goal of this system was to query a restaurant's menu items - in our case the restaurant theme is Curry. 
+This repo contains a group project from the course [Knowledge Representation](https://research.vu.nl/en/courses/knowledge-representation-4) (2024-25) at the Vrije Universiteit Amsterdam (VU). The task was to create an intelligent reasoning system based on Description Logic (DL) consisting of an ontology and a reasoner based on Efficient Reasoning (EL). The goal of this system was to query a restaurant's menu items - in our case the restaurant theme is Curry. 
 
 
 ### Curry Ontology 

@@ -9,7 +9,7 @@ The Curry ontology is inspired by the [pizza ontology](https://github.com/owlcs/
 
 
 ### Report
-The report contains further details on the structure of reasoner and ontology and provides a nuanced perspective on challenges. In addition, we evaluate how the expressivity of the Curry ontology requires a similar level of expressivity from the reasoner. While EL reasoners are popular due to their efficiency in the case of this small ontology it is more pragmatic to apply reasoners such as HermiT, which allow for higher expressivity, thus more sophisticated queries. 
+The [report](https://github.com/mklblm/KR-EL-Reasoner/blob/main/KR_assignment_II_group40.pdf) contains further details on the structure of reasoner and ontology and provides a nuanced perspective on challenges. In addition, we evaluate how the expressivity of the Curry ontology requires a similar level of expressivity from the reasoner. While EL reasoners are popular due to their efficiency in the case of this small ontology it is more pragmatic to apply reasoners such as HermiT, which allow for higher expressivity, thus more sophisticated queries. 
 
 
 ## Getting Started

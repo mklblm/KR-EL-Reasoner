@@ -1,15 +1,17 @@
 # VU Knowledge Representation - EL Reasoner
+This repo contains a group project within the course [Knowledge Representation](https://research.vu.nl/en/courses/knowledge-representation-4) (2024-25). The task was to create an intelligent reasoning system based on Description Logic (DL) consisting of an ontology and a custom reasoner based on Efficient Reasoning (EL). The goal of this system was to query a restaurant's menu items - in our case the restaurant theme is Curry. 
 
-This repo contains a group project within the course [Knowledge Representation](https://research.vu.nl/en/courses/knowledge-representation-4) (2024-25). The task was to create an intelligent reasoning system based on Description Logic (DL) consisting of an ontology and a custom reasoner based on Efficient Reasoning (EL). The goal of this system was to query menu items of a restaurant - in our case the restaurant theme is Curry. 
 
 ### Curry Ontology 
-The Curry ontology is inspired by the [pizza ontology](https://github.com/owlcs/pizza-ontology/blob/master/pizza.owl) and employs Attributive Concept Language with Complements (ALC). In addition, we enhanced the Curry ontology to go beyond the expressivity of ALC, for example through the use of transitive roles, inversion, and nominals. It is a consistent ontology and contains 260 axioms, 70 classes, eight roles, and four individuals. In addition, the ontology contains 107 subclasses, 11 equivalences and 14 disjoint classes. Examples of classes are MassamanCurry, CurryIngredient, or Chicken. Examples of roles include hasCurryIngredient or hasSpiciness. More examples of the Curry ontology can be found in the report.   
+The Curry ontology is inspired by the [pizza ontology](https://github.com/owlcs/pizza-ontology/blob/master/pizza.owl) and employs Attributive Concept Language with Complements (ALC). In addition, we enhanced the Curry ontology to go beyond the expressivity of ALC, for example through the use of transitive roles, inversion, and nominals. It is a consistent ontology and contains 260 axioms, 70 classes, eight roles, and four individuals. In addition, the ontology contains 107 subclasses, 11 equivalences, and 14 disjoint classes. Examples of classes are MassamanCurry, CurryIngredient, or Chicken. Examples of roles include hasCurryIngredient or hasSpiciness. More examples of the Curry ontology can be found in the report. The Curry ontology was implemented using the software tool [Protegé](https://protege.stanford.edu/).   
 
-### EL reasoner 
+
+### EL Reasoner 
+To query the Curry ontology, we implemented an EL reasoner using the [dl4python library](https://github.com/PKoopmann/dl-lib), also described below. The assignment required that the reasoner would return all subsumers of a given class. The efficiency of EL is obtained by the use of a restricted set of logical constructors, namely $\top$, $\sqcap$, and $\exists$ while omitting other constructors, most prominently $\neg$, $\sqcup$, and $\forall$. The individual steps of the EL reasoning algorithm - including the $\top$-rule, $\sqcap$-rule I, $\sqcap$-rule II, $\exists$-rule I, $\exists$-rule II, and $\sqsubseteq$-rule - were implemented from scratch.     
 
 
 ### Report
-The [report](https://github.com/mklblm/KR-EL-Reasoner/blob/main/KR_assignment_II_group40.pdf) contains further details on the structure of reasoner and ontology and provides a nuanced perspective on challenges. In addition, we evaluate how the expressivity of the Curry ontology requires a similar level of expressivity from the reasoner. While EL reasoners are popular due to their efficiency in the case of this small ontology it is more pragmatic to apply reasoners such as HermiT, which allow for higher expressivity, thus more sophisticated queries. 
+The [report](https://github.com/mklblm/KR-EL-Reasoner/blob/main/KR_assignment_II_group40.pdf) contains further details on the structure of reasoner and ontology and provides a nuanced perspective on several challenges. In addition, we evaluate how the expressivity of the Curry ontology requires a similar level of expressivity from the reasoner. While EL reasoners are popular due to their efficiency in the case of this small ontology it is more pragmatic to apply reasoners such as HermiT, which allow for higher expressivity, and thus more sophisticated queries. 
 
 
 ## Getting Started

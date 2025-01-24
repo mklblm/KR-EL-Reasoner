@@ -65,29 +65,31 @@ The EL reasoner can be run by calling the following command in the terminal:
 
 ### Example
 
-Below is an example command that can be used to find the subsumers of the "Margherita" class in the pizza.owl file.
+Below is an example command that can be used to find the subsumers of the "MassamanCurry" class in the curry_ontology.rdf file.
 
-```python main.py ontologies/pizza.owl '"Margherita"'```
+```python main.py ontologies/pizza.owl '"MassamanCurry"'```
 
 The output of this command will look like this:
 
-CheesyPizza
-
-Margherita
-
-PizzaComUmNome
-
-DomainThing
-
-Pizza
+NamedCurry
 
 Food
 
+MassamanCurry
+
+CreamBasedCurry
+
+Domain Thing
+
+Curry
+
+ChickenCurry
+
 ⊤
 
-The printed classes are the found subsumers for the Margherita class. This list can be compared to the pizza ontology file itself.
+The printed classes are the found subsumers for the MassamanCurry class. This list can be compared to the curry ontology file itself.
 
-Other examples can be run by replacting "Margherita" with any other named class, e.g. "Cajun" or "Caprina".
+Other examples can be run by replacting "MassamanCurry" with any other named class, e.g. "Coriander" or "ChickenCurry".
 
 ## Authors
 * Alexandra Genis [github](https://github.com/al-101010)

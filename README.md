@@ -1,6 +1,8 @@
 # VU Knowledge Representation - EL Reasoner
 
-ADD PARAGRAPH OF PROJECT DESCRIPTION
+This repo contains a group project within the course [Knowledge Representation](https://research.vu.nl/en/courses/knowledge-representation-4) (2024-25). The task was to create an intelligent reasoning system based on Description Logic (DL) to query menu items of a restaurant - in our case the restaurant theme is Curry. 
+
+The reasoning system consists of an ontology inspired by the [pizza ontology](https://github.com/owlcs/pizza-ontology/blob/master/pizza.owl) and a custom EL-reasoner. The Curry ontology is created around Attributive Concept Language with Complements (ALC) but uses expressivity that goes beyond ALC in some cases.    
 
 ## Getting Started
 

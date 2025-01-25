@@ -7,7 +7,7 @@ The Curry ontology is inspired by the [pizza ontology](https://github.com/owlcs/
 
 
 ### EL Reasoner 
-To query the Curry ontology, we implemented an EL reasoner using the [dl4python library](https://github.com/PKoopmann/dl-lib), also described below. The assignment required that the reasoner would return all subsumers of a given class. The efficiency of EL is obtained by the use of a restricted set of logical constructors, namely $\top$, $\sqcap$, and $\exists$ while omitting other constructors, most prominently $\neg$, $\sqcup$, and $\forall$. The individual steps of the EL reasoning algorithm - including the $\top$-rule, $\sqcap$-rule I, $\sqcap$-rule II, $\exists$-rule I, $\exists$-rule II, and $\sqsubseteq$-rule - were implemented from scratch.     
+To query the Curry ontology, we implemented an EL reasoner using the [dl4python library](https://github.com/PKoopmann/dl-lib), also described below. The assignment required that the reasoner would return all subsumers of a given class. The efficiency of EL is obtained by the use of a restricted set of logical constructors, namely $\top$, $\sqcap$, and $\exists$ while omitting other constructors, most prominently $\neg$, $\sqcup$, and $\forall$. The individual steps of the EL Completion Algorithm - including the $\top$-rule, $\sqcap$-rule I, $\sqcap$-rule II, $\exists$-rule I, $\exists$-rule II, and $\sqsubseteq$-rule - were implemented from scratch.     
 
 
 ### Report
